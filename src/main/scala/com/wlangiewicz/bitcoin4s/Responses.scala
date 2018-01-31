@@ -96,4 +96,32 @@ object Responses {
 
   case class SetTxFee(result: Boolean) extends CorrectResponse
 
+  case class Transaction(
+      amount: BigDecimal,
+      fee: Option[BigDecimal],
+      confirmations: Int,
+      generated: Option[Boolean],
+      blockhash: Option[String],
+      blockindex: Option[Int],
+      blocktime: Option[Int],
+      txid: String,
+      walletconflicts: List[String],
+      time: Long,
+      timereceived: Long,
+      `bip125-replaceable`: String,
+      comment: Option[String],
+      to: Option[String],
+      details: List[TransactionDetails],
+      hex: String) extends CorrectResponse
+
+  case class TransactionDetails(
+      involvesWatchonly: Option[Boolean],
+      account: String,
+      address: Option[String],
+      category: String,
+      amount: BigDecimal,
+      vout: Int,
+      fee: Option[BigDecimal],
+      abandoned: Option[Boolean])
+
 }
