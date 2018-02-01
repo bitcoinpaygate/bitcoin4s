@@ -111,4 +111,11 @@ class BitcoinClient(httpClient: HttpClient)(implicit system: ActorSystem, materi
     val response = httpClient.performRequest(request)
     response.flatMap(unmarshalResponse[HeaderHashes])
   }
+
+  def getTransaction(txid: String)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[Transaction]] = {
+    val request = httpClient.httpRequestWithParams("gettransaction", Vector(txid))
+    val response = httpClient.performRequest(request)
+    response.flatMap(unmarshalResponse[Transaction])
+  }
+
 }
