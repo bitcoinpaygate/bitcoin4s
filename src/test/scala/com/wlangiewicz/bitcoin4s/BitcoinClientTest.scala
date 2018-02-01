@@ -163,4 +163,13 @@ class BitcoinClientTest extends FlatSpec with Matchers with ScalaFutures {
     }
   }
 
+  it should "get transaction by id" in {
+    val txid = "4528087ee62cc971be2d8dcf6c4b39d5603a0bc66cfb16c6f2448ea52f3cda3c"
+    whenReady(bitcoinClient.getTransaction(txid)) {
+      case Left(_) => throw new RuntimeException("unexpected bitcoind response")
+      case Right(response) =>
+        response.fee shouldBe Some(BigDecimal(-0.1))
+        response.details should have size 2
+    }
+  }
 }

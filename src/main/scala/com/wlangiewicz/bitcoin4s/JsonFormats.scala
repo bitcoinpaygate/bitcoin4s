@@ -18,6 +18,9 @@ trait JsonFormats extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val UnspentTransactionFormat: RootJsonFormat[UnspentTransaction] = jsonFormat9(UnspentTransaction)
   implicit val AccountFormat: RootJsonFormat[Account] = jsonFormat2(Account)
 
+  implicit val TransactionDetailsFormat: RootJsonFormat[TransactionDetails] = jsonFormat8(TransactionDetails)
+  implicit val TransactionFormat: RootJsonFormat[Transaction] = jsonFormat16(Transaction)
+
   implicit object EstimateFeeFormat extends RootJsonReader[EstimateFee] {
     override def read(json: JsValue): EstimateFee = json match {
       case JsNumber(x) => EstimateFee(x)
