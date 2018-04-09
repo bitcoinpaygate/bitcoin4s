@@ -1,0 +1,16 @@
+{
+  "result": {
+    "testnet": true,
+    "currentblockweight": 0,
+    "difficulty": 1300727.855652248,
+    "blocks": 1089632,
+    "errors": "Warning: unknown new rules activated (versionbit 28)",
+    "pooledtx": 6,
+    "currentblocktx": 0,
+    "networkhashps": 3269881530063.402,
+    "chain": "test",
+    "currentblocksize": 0
+  },
+  "error": null,
+  "id": null
+}
