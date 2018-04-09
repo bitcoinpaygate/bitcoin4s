@@ -118,4 +118,10 @@ class BitcoinClient(httpClient: HttpClient)(implicit system: ActorSystem, materi
     response.flatMap(unmarshalResponse[Transaction])
   }
 
+  def listSinceBlock(headerHash: String, targetConfirmations: Int = 1, includeWatchOnly: Boolean = false)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[ListSinceBlockResponse]] = {
+    val request = httpClient.httpRequestWithParams("listsinceblock", Vector(headerHash, targetConfirmations, includeWatchOnly))
+    val response = httpClient.performRequest(request)
+    response.flatMap(unmarshalResponse[ListSinceBlockResponse])
+  }
+
 }
