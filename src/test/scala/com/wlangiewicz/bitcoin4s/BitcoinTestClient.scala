@@ -22,9 +22,10 @@ class BitcoinTestClient(user: String, password: String, host: String, port: Int)
 
     val params = entityJson.fields.get("params").map {
       case JsArray(values) => values.map {
-        case JsString(s) => s
-        case JsNumber(n) => n.toString
-        case other       => deserializationError(s"expected JsArray to be String but got: $other")
+        case JsString(s)  => s
+        case JsNumber(n)  => n.toString
+        case JsBoolean(b) => b.toString
+        case other        => deserializationError(s"expected JsArray to be String but got: $other")
       }
       case other => deserializationError(s"expected params as JsArray but got: $other")
     }
@@ -55,6 +56,7 @@ class BitcoinTestClient(user: String, password: String, host: String, port: Int)
           case "settxfee" if params(0).toDouble < 0 => TestData.setTxFeeOutOfRangeResponse
           case "settxfee" => TestData.setTxFeeResponse
           case "gettransaction" => TestData.getTransactionResponse
+          case "listsinceblock" => TestData.listSinceBlockResponse
           case _ => JsNumber(-1)
         }
     }

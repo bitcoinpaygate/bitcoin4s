@@ -96,7 +96,7 @@ object Responses {
 
   case class SetTxFee(result: Boolean) extends CorrectResponse
 
-  case class ListSinceBlockResponse(transactions: List[Transaction], lastblock: String) extends CorrectResponse
+  case class ListSinceBlockResponse(transactions: List[ListSinceBlockTransaction], lastblock: String) extends CorrectResponse
 
   case class ListSinceBlockTransaction(
       address: String,
