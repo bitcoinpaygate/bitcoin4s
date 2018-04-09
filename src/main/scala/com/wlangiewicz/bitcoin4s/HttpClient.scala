@@ -25,6 +25,7 @@ abstract class HttpClient(val user: String, val password: String, val host: Stri
       case param: Int        => param.toString
       case param: BigDecimal => param.toString
       case param: String     => "\"" + param + "\""
+      case param: Boolean    => param.toString
     }
 
     HttpRequest(

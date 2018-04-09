@@ -172,4 +172,17 @@ class BitcoinClientTest extends FlatSpec with Matchers with ScalaFutures {
         response.details should have size 2
     }
   }
+
+  "listsinceblock" should "return hash of last block and list of transactions since given block" in {
+    val blockhash = "4fed3588db4a6e40597620bd957beb959eacf502291e83a39898a740211727b8"
+    val targetConfirmations = 3
+    val includeWatchOnly = false
+    whenReady(bitcoinClient.listSinceBlock(blockhash, targetConfirmations, includeWatchOnly)) {
+      case Left(_) => throw new RuntimeException("unexpected bitcoind response")
+      case Right(response) =>
+        response.lastblock shouldBe "4fed3588db4a6e40597620bd957beb959eacf502291e83a39898a740211727b8"
+        response.transactions should have size 2
+    }
+  }
+
 }
