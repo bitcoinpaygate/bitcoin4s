@@ -104,7 +104,7 @@ object Responses {
       amount: BigDecimal,
       vout: Option[Int],
       fee: Option[BigDecimal],
-      confirmations: Option[Long],
+      confirmations: Long,
       trusted: Option[Boolean],
       generated: Option[Boolean],
       blockhash: Option[String],
