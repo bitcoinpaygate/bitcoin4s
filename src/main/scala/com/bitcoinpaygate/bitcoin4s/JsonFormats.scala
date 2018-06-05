@@ -1,8 +1,8 @@
-package com.wlangiewicz.bitcoin4s
+package com.bitcoinpaygate.bitcoin4s
 
 import spray.json._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import com.wlangiewicz.bitcoin4s.Responses._
+import com.bitcoinpaygate.bitcoin4s.Responses._
 
 trait JsonFormats extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val AddressFormat: RootJsonFormat[Address] = jsonFormat3(Address)

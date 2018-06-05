@@ -1,4 +1,4 @@
-package com.wlangiewicz.bitcoin4s
+package com.bitcoinpaygate.bitcoin4s
 
 import akka.http.scaladsl.model._
 import spray.json._

@@ -1,8 +1,8 @@
-package com.wlangiewicz.bitcoin4s
+package com.bitcoinpaygate.bitcoin4s
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import com.wlangiewicz.bitcoin4s.Responses.GeneralErrorResponse
+import com.bitcoinpaygate.bitcoin4s.Responses.GeneralErrorResponse
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.concurrent.ScalaFutures
 import spray.json._
