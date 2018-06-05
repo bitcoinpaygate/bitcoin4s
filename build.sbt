@@ -5,22 +5,20 @@ import scalariform.formatter.preferences._
 
 name := "bitcoin4s"
 
-version := "0.3.1"
+version := "0.3.2"
 
-scalaVersion := "2.12.4"
-
-crossScalaVersions := Seq("2.12.4")
+scalaVersion := "2.12.6"
 
 organization := "bitcoinpaygate"
 
 libraryDependencies ++= {
-  val akkaHttpVersion       = "10.0.5"
+  val akkaHttpVersion       = "10.0.13"
 
   Seq(
-    "org.scalatest"        %% "scalatest"              % "3.0.1"          % "test",
+    "org.scalatest"        %% "scalatest"              % "3.0.5"          % "test",
     "com.typesafe.akka"    %% "akka-http-core"         % akkaHttpVersion,
     "com.typesafe.akka"    %% "akka-http-spray-json"   % akkaHttpVersion,
-    "io.spray"             %% "spray-json"             % "1.3.3"
+    "io.spray"             %% "spray-json"             % "1.3.4"
   )
 }
 
@@ -61,10 +59,10 @@ val publishSettings =
   else
     Seq(
       pomExtra := <scm>
-        <url>https://github.com/wlk/bitcoin4s</url>
-        <connection>https://github.com/wlk/bitcoin4s</connection>
+        <url>https://github.com/bitcoinpaygate/bitcoin4s</url>
+        <connection>https://github.com/bitcoinpaygate/bitcoin4s</connection>
       </scm>,
       publishArtifact in Test := false,
-      homepage := Some(url("https://github.com/wlk/bitcoin4s")),
+      homepage := Some(url("https://github.com/bitcoinpaygate/bitcoin4s")),
       publishMavenStyle := false
     )
