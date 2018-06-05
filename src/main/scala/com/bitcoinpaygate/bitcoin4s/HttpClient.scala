@@ -21,12 +21,7 @@ abstract class HttpClient(val user: String, val password: String, val host: Stri
   }
 
   def httpRequestWithParams(method: String, params: Vector[Any]): HttpRequest = {
-    val formattedParams: Vector[String] = params.map {
-      case param: Int        => param.toString
-      case param: BigDecimal => param.toString
-      case param: String     => "\"" + param + "\""
-      case param: Boolean    => param.toString
-    }
+    val formattedParams = HttpParamsConverter.rpcParamsToJson(params)
 
     HttpRequest(
       uri = connectionUri,

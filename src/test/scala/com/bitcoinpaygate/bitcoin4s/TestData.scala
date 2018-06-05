@@ -23,6 +23,7 @@ object TestData {
   val setTxFeeOutOfRangeResponse = readJson("set-tx-tee-out-of-range-response.json")
   val getTransactionResponse = readJson("get-transaction-response.json")
   val listSinceBlockResponse = readJson("list-since-block-response.json")
+  val sendManyResponse = readJson("send-many-response.json")
 
   private def readJson(name: String): JsValue = {
     val json = scala.io.Source.fromResource(name).getLines.mkString

@@ -9,11 +9,6 @@ import scala.concurrent.{ExecutionContext, Future}
 import akka.http.scaladsl.model.MediaTypes.`application/json`
 
 class BitcoinTestClient(user: String, password: String, host: String, port: Int)(implicit materializer: ActorMaterializer, ec: ExecutionContext) extends HttpClient(user, password, host, port) {
-  val User = "user"
-  val Password = "password"
-  val Host = "localhost"
-  val Port = 8332
-
   private def extractMethod(entityJson: JsObject): (String, Vector[String]) = {
     val method = entityJson.fields("method") match {
       case JsString(m) => m.toString
@@ -25,6 +20,7 @@ class BitcoinTestClient(user: String, password: String, host: String, port: Int)
         case JsString(s)  => s
         case JsNumber(n)  => n.toString
         case JsBoolean(b) => b.toString
+        case JsObject(a)  => a.toString
         case other        => deserializationError(s"expected JsArray to be String but got: $other")
       }
       case other => deserializationError(s"expected params as JsArray but got: $other")
@@ -57,6 +53,7 @@ class BitcoinTestClient(user: String, password: String, host: String, port: Int)
           case "settxfee" => TestData.setTxFeeResponse
           case "gettransaction" => TestData.getTransactionResponse
           case "listsinceblock" => TestData.listSinceBlockResponse
+          case "sendmany" => TestData.sendManyResponse
           case _ => JsNumber(-1)
         }
     }
