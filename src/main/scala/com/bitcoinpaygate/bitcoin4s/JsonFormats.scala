@@ -21,8 +21,8 @@ trait JsonFormats extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val TransactionDetailsFormat: RootJsonFormat[TransactionDetails] = jsonFormat8(TransactionDetails)
   implicit val TransactionFormat: RootJsonFormat[Transaction] = jsonFormat16(Transaction)
 
-  implicit val ListSinceBlockTransactionFormat = jsonFormat19(ListSinceBlockTransaction)
-  implicit val ListSinceBlockResponseFormat = jsonFormat2(ListSinceBlockResponse)
+  implicit val ListSinceBlockTransactionFormat: RootJsonFormat[ListSinceBlockTransaction] = jsonFormat19(ListSinceBlockTransaction)
+  implicit val ListSinceBlockResponseFormat: RootJsonFormat[ListSinceBlockResponse] = jsonFormat2(ListSinceBlockResponse)
 
   implicit object EstimateFeeFormat extends RootJsonReader[EstimateFee] {
     override def read(json: JsValue): EstimateFee = json match {
