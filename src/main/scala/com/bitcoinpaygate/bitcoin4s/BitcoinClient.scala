@@ -1,4 +1,4 @@
-package com.wlangiewicz.bitcoin4s
+package com.bitcoinpaygate.bitcoin4s
 
 import akka.actor.ActorSystem
 
@@ -7,7 +7,7 @@ import akka.http.scaladsl.model._
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
 import spray.json._
-import com.wlangiewicz.bitcoin4s.Responses._
+import com.bitcoinpaygate.bitcoin4s.Responses._
 
 class BitcoinClient(httpClient: HttpClient)(implicit system: ActorSystem, materializer: ActorMaterializer) extends JsonFormats {
 

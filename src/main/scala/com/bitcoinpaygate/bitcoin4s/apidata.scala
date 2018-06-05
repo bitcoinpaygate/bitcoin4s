@@ -1,4 +1,4 @@
-package com.wlangiewicz.bitcoin4s
+package com.bitcoinpaygate.bitcoin4s
 
 case class Address(
     address: String,
