@@ -1,11 +1,12 @@
 import com.typesafe.sbt.SbtScalariform
 import com.typesafe.sbt.SbtScalariform.ScalariformKeys
-
 import scalariform.formatter.preferences._
+
+import scala.io.Source
 
 name := "bitcoin4s"
 
-version := "0.3.2"
+version := Source.fromFile("VERSION").getLines.mkString
 
 scalaVersion := "2.12.6"
 
@@ -13,12 +14,14 @@ organization := "bitcoinpaygate"
 
 libraryDependencies ++= {
   val akkaHttpVersion       = "10.0.13"
+  val scalaTestVersion      = "3.0.5"
+  val sprayJsonVersion      = "1.3.4"
 
   Seq(
-    "org.scalatest"        %% "scalatest"              % "3.0.5"          % "test",
+    "org.scalatest"        %% "scalatest"              % scalaTestVersion          % "test",
     "com.typesafe.akka"    %% "akka-http-core"         % akkaHttpVersion,
     "com.typesafe.akka"    %% "akka-http-spray-json"   % akkaHttpVersion,
-    "io.spray"             %% "spray-json"             % "1.3.4"
+    "io.spray"             %% "spray-json"             % sprayJsonVersion
   )
 }
 
