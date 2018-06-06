@@ -22,17 +22,7 @@ libraryDependencies ++= {
   )
 }
 
-scalacOptions ++= Seq(
-  "-encoding", "utf8",
-  "-feature",
-  "-language:postfixOps",
-  "-language:implicitConversions",
-  "-unchecked",
-  "-deprecation",
-  "-Xfatal-warnings",
-  "-Xlint",
-  "-Ywarn-dead-code"
-)
+scalacOptions --= Seq("-Xfatal-warnings")
 
 scalariformAutoformat := true
 ScalariformKeys.preferences := ScalariformKeys.preferences.value

@@ -124,4 +124,9 @@ class BitcoinClient(httpClient: HttpClient)(implicit system: ActorSystem, materi
     response.flatMap(unmarshalResponse[ListSinceBlockResponse])
   }
 
+  def sendMany(account: String = "", recipients: ClientObjects.Recipients)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[SentTransactionId]] = {
+    val request = httpClient.httpRequestWithParams("sendmany", Vector(account, recipients))
+    val response = httpClient.performRequest(request)
+    response.flatMap(unmarshalResponse[SentTransactionId])
+  }
 }

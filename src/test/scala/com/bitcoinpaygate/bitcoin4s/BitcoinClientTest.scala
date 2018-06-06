@@ -185,4 +185,13 @@ class BitcoinClientTest extends FlatSpec with Matchers with ScalaFutures {
     }
   }
 
+  "sendmany" should "return transaction id" in {
+    val txId = "b5d1a82d7fd1f0e566bb0aabed172019854e2dff0ae729dc446beefd17c5c0cc"
+    val sendManyMap = ClientObjects.Recipients(Map("address1" -> 0.1, "address2" -> 0.3))
+    whenReady(bitcoinClient.sendMany(recipients = sendManyMap)) {
+      case Left(_)              => throw new RuntimeException("unexpected bitcoind response")
+      case Right(transactionId) => transactionId.id shouldBe txId
+    }
+  }
+
 }

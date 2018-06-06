@@ -4,7 +4,7 @@ import spray.json._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import com.bitcoinpaygate.bitcoin4s.Responses._
 
-trait JsonFormats extends SprayJsonSupport with DefaultJsonProtocol {
+private[bitcoin4s] trait JsonFormats extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val AddressFormat: RootJsonFormat[Address] = jsonFormat3(Address)
   implicit val NetworkFormat: RootJsonFormat[Network] = jsonFormat5(Network)
   implicit val SoftforkFormat: RootJsonFormat[Softfork] = jsonFormat7(Softfork)
@@ -21,8 +21,8 @@ trait JsonFormats extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val TransactionDetailsFormat: RootJsonFormat[TransactionDetails] = jsonFormat8(TransactionDetails)
   implicit val TransactionFormat: RootJsonFormat[Transaction] = jsonFormat16(Transaction)
 
-  implicit val ListSinceBlockTransactionFormat = jsonFormat19(ListSinceBlockTransaction)
-  implicit val ListSinceBlockResponseFormat = jsonFormat2(ListSinceBlockResponse)
+  implicit val ListSinceBlockTransactionFormat: RootJsonFormat[ListSinceBlockTransaction] = jsonFormat19(ListSinceBlockTransaction)
+  implicit val ListSinceBlockResponseFormat: RootJsonFormat[ListSinceBlockResponse] = jsonFormat2(ListSinceBlockResponse)
 
   implicit object EstimateFeeFormat extends RootJsonReader[EstimateFee] {
     override def read(json: JsValue): EstimateFee = json match {
