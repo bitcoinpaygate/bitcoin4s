@@ -147,4 +147,6 @@ object Responses {
       fee: Option[BigDecimal],
       abandoned: Option[Boolean])
 
+  case class TransactionHex(hex: String) extends CorrectResponse
+  case class SignedRawTransaction(hex: String, complete: Boolean) extends CorrectResponse
 }

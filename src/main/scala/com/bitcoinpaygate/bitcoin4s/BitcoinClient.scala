@@ -1,13 +1,14 @@
 package com.bitcoinpaygate.bitcoin4s
 
 import akka.actor.ActorSystem
-
-import scala.concurrent.{ExecutionContext, Future}
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
-import spray.json._
+import com.bitcoinpaygate.bitcoin4s.ClientObjects.{RawTransactionInputs, Recipients}
 import com.bitcoinpaygate.bitcoin4s.Responses._
+import spray.json._
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class BitcoinClient(httpClient: HttpClient)(implicit system: ActorSystem, materializer: ActorMaterializer) extends JsonFormats {
 
@@ -129,4 +130,31 @@ class BitcoinClient(httpClient: HttpClient)(implicit system: ActorSystem, materi
     val response = httpClient.performRequest(request)
     response.flatMap(unmarshalResponse[SentTransactionId])
   }
+
+  def createRawTransaction(inputs: RawTransactionInputs, outputs: Recipients)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[TransactionHex]] = {
+    val request = httpClient.httpRequestWithParams("createrawtransaction", Vector(inputs, outputs))
+    val response = httpClient.performRequest(request)
+    response.flatMap(unmarshalResponse[TransactionHex])
+  }
+
+  def signRawTransaction(transactionHex: String)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[SignedRawTransaction]] = {
+    val request = httpClient.httpRequestWithParams("signrawtransaction", Vector(transactionHex))
+    val response = httpClient.performRequest(request)
+    response.flatMap(unmarshalResponse[SignedRawTransaction])
+  }
+
+  def sendRawTransaction(signedHex: String)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[SentTransactionId]] = {
+    val request = httpClient.httpRequestWithParams("sendrawtransaction", Vector(signedHex))
+    val response = httpClient.performRequest(request)
+    response.flatMap(unmarshalResponse[SentTransactionId])
+  }
+
+  def sendRawTransaction(inputs: RawTransactionInputs, outputs: Recipients)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[SentTransactionId]] = {
+    (for {
+      rawTransaction <- BitcoinResponseT(createRawTransaction(inputs, outputs))
+      signedTransaction <- BitcoinResponseT(signRawTransaction(rawTransaction.hex))
+      sentTransactionId <- BitcoinResponseT(sendRawTransaction(signedTransaction.hex))
+    } yield sentTransactionId).value
+  }
+
 }
