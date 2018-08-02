@@ -65,7 +65,7 @@ class BitcoinClient(httpClient: HttpClient)(implicit system: ActorSystem, materi
   }
 
   def listUnspentTransactions(minimumConfirmations: Option[Int] = None, maximumConfirmations: Option[Int] = None)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[UnspentTransactions]] = {
-    val request = httpClient.httpRequestWithParams("listunspent", Vector(minimumConfirmations.getOrElse(0), maximumConfirmations.getOrElse(0)))
+    val request = httpClient.httpRequestWithParams("listunspent", Vector(minimumConfirmations.getOrElse(1), maximumConfirmations.getOrElse(9999999)))
     val response = httpClient.performRequest(request)
     response.flatMap(unmarshalResponse[UnspentTransactions])
   }
