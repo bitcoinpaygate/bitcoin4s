@@ -12,7 +12,7 @@ object TestData {
   val estimateFeeResponse = readJson("esitmate-fee-response.json")
   val listUnspentResponse = readJson("list-unspent-response.json")
   val listAccountsResponse = readJson("list-accounts-response.json")
-  val getNewAddressResponse = readJson("get-new-address-response")
+  val getNewAddressResponse = readJson("get-new-address-response.json")
   val addWitnessAddressResponse = readJson("add-witness-address-response.json")
   val sendFromResponse = readJson("send-from-response.json")
   val sendToAddressResponse = sendFromResponse
@@ -24,6 +24,9 @@ object TestData {
   val getTransactionResponse = readJson("get-transaction-response.json")
   val listSinceBlockResponse = readJson("list-since-block-response.json")
   val sendManyResponse = readJson("send-many-response.json")
+  val createRawTransaction = readJson("create-raw-transaction.json")
+  val signRawTransaction = readJson("sign-raw-transaction.json")
+  val sendRawTransaction = readJson("send-raw-transaction.json")
 
   private def readJson(name: String): JsValue = {
     val json = scala.io.Source.fromResource(name).getLines.mkString

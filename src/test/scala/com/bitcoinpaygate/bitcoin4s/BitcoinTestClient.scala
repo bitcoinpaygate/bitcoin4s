@@ -21,6 +21,7 @@ class BitcoinTestClient(user: String, password: String, host: String, port: Int)
         case JsNumber(n)  => n.toString
         case JsBoolean(b) => b.toString
         case JsObject(a)  => a.toString
+        case JsArray(o)   => o.toString()
         case other        => deserializationError(s"expected JsArray to be String but got: $other")
       }
       case other => deserializationError(s"expected params as JsArray but got: $other")
@@ -54,6 +55,10 @@ class BitcoinTestClient(user: String, password: String, host: String, port: Int)
           case "gettransaction" => TestData.getTransactionResponse
           case "listsinceblock" => TestData.listSinceBlockResponse
           case "sendmany" => TestData.sendManyResponse
+          case "createrawtransaction" => TestData.createRawTransaction
+          case "signrawtransaction" => TestData.signRawTransaction
+          case "sendrawtransaction" => TestData.sendRawTransaction
+
           case _ => JsNumber(-1)
         }
     }
