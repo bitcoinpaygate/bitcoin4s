@@ -2,11 +2,11 @@ package com.bitcoinpaygate.bitcoin4s
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import com.bitcoinpaygate.bitcoin4s.ClientObjects.{EstimateMode, RawTransactionInput, RawTransactionInputs, Recipients}
+import com.bitcoinpaygate.bitcoin4s.ClientObjects._
 import com.bitcoinpaygate.bitcoin4s.Responses.{GetNewAddress, UnspentTransaction}
 import org.scalatest.{AsyncWordSpec, Ignore, Matchers}
 
-//@Ignore
+@Ignore
 class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
   implicit val actorSystem = ActorSystem("test")
   implicit val materializer = ActorMaterializer()
@@ -60,6 +60,16 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
     }
     "get new address" in {
       bitcoinClient.getNewAddress().map { result =>
+        result shouldBe 'right
+      }
+    }
+    "get new address for account" in {
+      bitcoinClient.getNewAddress(Some("account")).map { result =>
+        result shouldBe 'right
+      }
+    }
+    "get new address with type" in {
+      bitcoinClient.getNewAddress(None, Some(AddressType.LEGACY)).map { result =>
         result shouldBe 'right
       }
     }

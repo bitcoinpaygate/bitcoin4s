@@ -2,7 +2,7 @@ package com.bitcoinpaygate.bitcoin4s
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import com.bitcoinpaygate.bitcoin4s.ClientObjects.{RawTransactionInput, RawTransactionInputs}
+import com.bitcoinpaygate.bitcoin4s.ClientObjects.{AddressType, RawTransactionInput, RawTransactionInputs}
 import com.bitcoinpaygate.bitcoin4s.Responses.GeneralErrorResponse
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.concurrent.ScalaFutures
@@ -104,6 +104,13 @@ class BitcoinClientTest extends FlatSpec with Matchers with ScalaFutures {
 
   it should "return new address" in {
     whenReady(bitcoinClient.getNewAddress(Some("testaccount"))) {
+      case Left(_)           => throw new RuntimeException("unexpected bitcoind response")
+      case Right(newAddress) => newAddress.address should have size 34
+    }
+  }
+
+  it should "return new address for p2sh-segwit address type" in {
+    whenReady(bitcoinClient.getNewAddress(None, Some(AddressType.P2SH_SEGWIT))) {
       case Left(_)           => throw new RuntimeException("unexpected bitcoind response")
       case Right(newAddress) => newAddress.address should have size 34
     }

@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
-import com.bitcoinpaygate.bitcoin4s.ClientObjects.{EstimateMode, RawTransactionInputs, Recipients}
+import com.bitcoinpaygate.bitcoin4s.ClientObjects.{AddressType, EstimateMode, RawTransactionInputs, Recipients}
 import com.bitcoinpaygate.bitcoin4s.Responses._
 import spray.json._
 
@@ -86,6 +86,12 @@ class BitcoinClient(httpClient: HttpClient)(implicit system: ActorSystem, materi
 
   def getNewAddress(account: Option[String] = None)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[GetNewAddress]] = {
     val request = httpClient.httpRequestWithParams("getnewaddress", Vector(account).flatten)
+    val response = httpClient.performRequest(request)
+    response.flatMap(unmarshalResponse[GetNewAddress])
+  }
+
+  def getNewAddress(account: Option[String], addressType: Option[AddressType.Value])(implicit executionContext: ExecutionContext): Future[BitcoinResponse[GetNewAddress]] = {
+    val request = httpClient.httpRequestWithParams("getnewaddress", account.getOrElse("") +: addressType.map(_.toString).toVector)
     val response = httpClient.performRequest(request)
     response.flatMap(unmarshalResponse[GetNewAddress])
   }

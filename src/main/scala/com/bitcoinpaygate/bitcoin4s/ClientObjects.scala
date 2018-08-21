@@ -7,4 +7,9 @@ object ClientObjects {
   object EstimateMode extends Enumeration {
     val UNSET, ECONOMICAL, CONSERVATIVE = Value
   }
+  object AddressType extends Enumeration {
+    val LEGACY = Value("legacy")
+    val P2SH_SEGWIT = Value("p2sh-segwit")
+    val BECH32 = Value("bech32")
+  }
 }
