@@ -90,6 +90,7 @@ class BitcoinClient(httpClient: HttpClient)(implicit system: ActorSystem, materi
     response.flatMap(unmarshalResponse[GetNewAddress])
   }
 
+  @deprecated
   def addWitnessAddress(address: String)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[AddWitnessAddress]] = {
     val request = httpClient.httpRequestWithParams("addwitnessaddress", Vector(address))
     val response = httpClient.performRequest(request)

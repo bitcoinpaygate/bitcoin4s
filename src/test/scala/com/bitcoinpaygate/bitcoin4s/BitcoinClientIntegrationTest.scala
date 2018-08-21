@@ -6,7 +6,7 @@ import com.bitcoinpaygate.bitcoin4s.ClientObjects.{EstimateMode, RawTransactionI
 import com.bitcoinpaygate.bitcoin4s.Responses.{GetNewAddress, UnspentTransaction}
 import org.scalatest.{AsyncWordSpec, Ignore, Matchers}
 
-@Ignore
+//@Ignore
 class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
   implicit val actorSystem = ActorSystem("test")
   implicit val materializer = ActorMaterializer()
