@@ -152,13 +152,10 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
         input <- BitcoinResponseT(bitcoinClient.listUnspentTransactions())
         newAddress1 <- BitcoinResponseT(bitcoinClient.getNewAddress())
         newAddress2 <- BitcoinResponseT(bitcoinClient.getNewAddress())
-        createRawTransaction <-
-          BitcoinResponseT(
-            bitcoinClient.createRawTransaction(
-              rawTransactionInputs(input.unspentTransactions.head),
-              recipients(input.unspentTransactions.head.amount, newAddress1, newAddress2)
-            )
-          )
+        createRawTransaction <- BitcoinResponseT(
+          bitcoinClient.createRawTransaction(
+            rawTransactionInputs(input.unspentTransactions.head),
+            recipients(input.unspentTransactions.head.amount, newAddress1, newAddress2)))
       } yield createRawTransaction).value
 
       createRawTransaction.map { result =>
@@ -170,13 +167,10 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
         input <- BitcoinResponseT(bitcoinClient.listUnspentTransactions())
         newAddress1 <- BitcoinResponseT(bitcoinClient.getNewAddress())
         newAddress2 <- BitcoinResponseT(bitcoinClient.getNewAddress())
-        sendRawTransaction <-
-          BitcoinResponseT(
-            bitcoinClient.sendRawTransaction(
-              rawTransactionInputs(input.unspentTransactions.head),
-              recipients(input.unspentTransactions.head.amount, newAddress1, newAddress2)
-            )
-          )
+        sendRawTransaction <- BitcoinResponseT(
+          bitcoinClient.sendRawTransaction(
+            rawTransactionInputs(input.unspentTransactions.head),
+            recipients(input.unspentTransactions.head.amount, newAddress1, newAddress2)))
       } yield sendRawTransaction).value
 
       sendRawTransaction.map { result =>
@@ -193,7 +187,6 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
     Recipients(
       addresses.map { address =>
         address.address -> amountToSplit
-      }.toMap
-    )
+      }.toMap)
   }
 }

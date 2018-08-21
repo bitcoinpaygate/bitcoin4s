@@ -72,7 +72,7 @@ class BitcoinClientTest extends FlatSpec with Matchers with ScalaFutures {
 
   it should "estimate smart fee" in {
     whenReady(bitcoinClient.estimateSmartFee(6)) {
-      case Left(_)    => throw new RuntimeException("unexpected bitcoind response")
+      case Left(_) => throw new RuntimeException("unexpected bitcoind response")
       case Right(fee) =>
         fee.feerate shouldBe Some(0.00010244)
         fee.blocks shouldBe 6
