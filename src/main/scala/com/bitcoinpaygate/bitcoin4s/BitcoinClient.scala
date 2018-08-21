@@ -59,6 +59,7 @@ class BitcoinClient(httpClient: HttpClient)(implicit system: ActorSystem, materi
     response.flatMap(unmarshalResponse[GetBlockChainInfo])
   }
 
+  @deprecated
   def estimateFee(blocks: Option[Int] = None)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[EstimateFee]] = {
     val request = httpClient.httpRequestWithParams("estimatefee", Vector(blocks.getOrElse(6)))
     val response = httpClient.performRequest(request)
