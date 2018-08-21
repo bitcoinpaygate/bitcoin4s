@@ -34,17 +34,13 @@ object Responses {
 
   case class GetMiningInfo(
       blocks: Int,
-      currentblocksize: Int,
+      currentblockweight: Int,
       currentblocktx: Int,
       difficulty: Int,
-      errors: String,
-      genproclimit: Option[Int],
       networkhashps: Int,
       pooledtx: Int,
-      testnet: Boolean,
       chain: String,
-      generate: Option[Boolean],
-      hashespersec: Option[Int]) extends CorrectResponse
+      warnings: String) extends CorrectResponse
 
   case class GetMemPoolInfo(
       size: Int,

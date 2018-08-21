@@ -11,7 +11,7 @@ private[bitcoin4s] trait JsonFormats extends SprayJsonSupport with DefaultJsonPr
 
   implicit val GetWalletInfoFormat: RootJsonFormat[GetWalletInfo] = jsonFormat7(GetWalletInfo)
   implicit val GetNetworkInfoFormat: RootJsonFormat[GetNetworkInfo] = jsonFormat9(GetNetworkInfo)
-  implicit val GetMiningInfoFormat: RootJsonFormat[GetMiningInfo] = jsonFormat12(GetMiningInfo)
+  implicit val GetMiningInfoFormat: RootJsonFormat[GetMiningInfo] = jsonFormat8(GetMiningInfo)
   implicit val GetMemPoolInfoFormat: RootJsonFormat[GetMemPoolInfo] = jsonFormat5(GetMemPoolInfo)
   implicit val GetBlockChainInfoFormat: RootJsonFormat[GetBlockChainInfo] = jsonFormat10(GetBlockChainInfo)
 
