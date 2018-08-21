@@ -59,13 +59,6 @@ class BitcoinClient(httpClient: HttpClient)(implicit system: ActorSystem, materi
     response.flatMap(unmarshalResponse[GetBlockChainInfo])
   }
 
-  @deprecated
-  def estimateFee(blocks: Option[Int] = None)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[EstimateFee]] = {
-    val request = httpClient.httpRequestWithParams("estimatefee", Vector(blocks.getOrElse(6)))
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[EstimateFee])
-  }
-
   def estimateSmartFee(confTarget: Int, estimateMode: Option[EstimateMode.Value] = None)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[EstimateSmartFee]] = {
     val request = httpClient.httpRequestWithParams("estimatesmartfee", confTarget +: estimateMode.map(_.toString).toVector)
     val response = httpClient.performRequest(request)
@@ -94,13 +87,6 @@ class BitcoinClient(httpClient: HttpClient)(implicit system: ActorSystem, materi
     val request = httpClient.httpRequestWithParams("getnewaddress", account.getOrElse("") +: addressType.map(_.toString).toVector)
     val response = httpClient.performRequest(request)
     response.flatMap(unmarshalResponse[GetNewAddress])
-  }
-
-  @deprecated
-  def addWitnessAddress(address: String)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[AddWitnessAddress]] = {
-    val request = httpClient.httpRequestWithParams("addwitnessaddress", Vector(address))
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[AddWitnessAddress])
   }
 
   def sendFrom(account: String, to: String, amount: BigDecimal, confirmations: Option[Int])(implicit executionContext: ExecutionContext): Future[BitcoinResponse[SentTransactionId]] = {

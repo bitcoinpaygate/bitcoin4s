@@ -61,7 +61,6 @@ object Responses {
       pruned: Boolean,
       pruneheight: Option[Int]) extends CorrectResponse
 
-  case class EstimateFee(estimate: BigDecimal) extends CorrectResponse
   case class EstimateSmartFee(feerate: Option[BigDecimal], errors: Option[List[String]], blocks: Int) extends CorrectResponse
 
   case class UnspentTransactions(unspentTransactions: Vector[UnspentTransaction]) extends CorrectResponse
@@ -84,8 +83,6 @@ object Responses {
       balance: BigDecimal) extends CorrectResponse
 
   case class GetNewAddress(address: String) extends CorrectResponse
-
-  case class AddWitnessAddress(address: String) extends CorrectResponse
 
   case class SentTransactionId(id: String) extends CorrectResponse
 

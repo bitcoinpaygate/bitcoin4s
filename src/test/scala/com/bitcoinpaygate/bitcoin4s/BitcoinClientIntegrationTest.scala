@@ -38,11 +38,6 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
         result shouldBe 'right
       }
     }
-    "estimate fee" in {
-      bitcoinClient.estimateFee().map { result =>
-        result shouldBe 'right
-      }
-    }
     "estimate smart fee" in {
       bitcoinClient.estimateSmartFee(6, Some(EstimateMode.CONSERVATIVE)).map { result =>
         result shouldBe 'right
@@ -70,16 +65,6 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
     }
     "get new address with type" in {
       bitcoinClient.getNewAddress(None, Some(AddressType.LEGACY)).map { result =>
-        result shouldBe 'right
-      }
-    }
-    "add witness address" in {
-      val addWitnessAddress = (for {
-        newAddress <- BitcoinResponseT(bitcoinClient.getNewAddress())
-        witnessAddress <- BitcoinResponseT(bitcoinClient.addWitnessAddress(newAddress.address))
-      } yield witnessAddress).value
-
-      addWitnessAddress.map { result =>
         result shouldBe 'right
       }
     }

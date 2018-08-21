@@ -34,13 +34,6 @@ private[bitcoin4s] trait JsonFormats extends SprayJsonSupport with DefaultJsonPr
     }
   }
 
-  implicit object EstimateFeeFormat extends RootJsonReader[EstimateFee] {
-    override def read(json: JsValue): EstimateFee = json match {
-      case JsNumber(x) => EstimateFee(x)
-      case x           => deserializationError("Expected EstimateFee as JsNumber, but got " + x)
-    }
-  }
-
   implicit object AccountsFormat extends RootJsonReader[Accounts] {
     override def read(json: JsValue): Accounts = json match {
       case JsObject(x) =>
@@ -56,13 +49,6 @@ private[bitcoin4s] trait JsonFormats extends SprayJsonSupport with DefaultJsonPr
     override def read(json: JsValue): GetNewAddress = json match {
       case JsString(x) => GetNewAddress(x)
       case x           => deserializationError("Expected GetNewAddress as JsString, but got " + x)
-    }
-  }
-
-  implicit object AddWithessAddressFormat extends RootJsonReader[AddWitnessAddress] {
-    override def read(json: JsValue): AddWitnessAddress = json match {
-      case JsString(x) => AddWitnessAddress(x)
-      case x           => deserializationError("Expected AddWitnessAddress as JsString, but got " + x)
     }
   }
 
