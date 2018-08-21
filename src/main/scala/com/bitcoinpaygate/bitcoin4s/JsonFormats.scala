@@ -25,6 +25,7 @@ private[bitcoin4s] trait JsonFormats extends SprayJsonSupport with DefaultJsonPr
   implicit val ListSinceBlockResponseFormat: RootJsonFormat[ListSinceBlockResponse] = jsonFormat2(ListSinceBlockResponse)
 
   implicit val SignedRawTransactionFormat: RootJsonFormat[SignedRawTransaction] = jsonFormat2(SignedRawTransaction)
+  implicit val EstimateSmartFeeFormat: RootJsonFormat[EstimateSmartFee] = jsonFormat3(EstimateSmartFee)
 
   implicit object TransactionHexFormat extends RootJsonReader[TransactionHex] {
     override def read(json: JsValue): TransactionHex = json match {

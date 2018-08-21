@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
-import com.bitcoinpaygate.bitcoin4s.ClientObjects.{RawTransactionInputs, Recipients}
+import com.bitcoinpaygate.bitcoin4s.ClientObjects.{EstimateMode, RawTransactionInputs, Recipients}
 import com.bitcoinpaygate.bitcoin4s.Responses._
 import spray.json._
 
@@ -64,6 +64,12 @@ class BitcoinClient(httpClient: HttpClient)(implicit system: ActorSystem, materi
     val request = httpClient.httpRequestWithParams("estimatefee", Vector(blocks.getOrElse(6)))
     val response = httpClient.performRequest(request)
     response.flatMap(unmarshalResponse[EstimateFee])
+  }
+
+  def estimateSmartFee(confTarget: Int, estimateMode: Option[EstimateMode.Value] = None)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[EstimateSmartFee]] = {
+    val request = httpClient.httpRequestWithParams("estimatesmartfee", confTarget +: estimateMode.map(_.toString).toVector)
+    val response = httpClient.performRequest(request)
+    response.flatMap(unmarshalResponse[EstimateSmartFee])
   }
 
   def listUnspentTransactions(minimumConfirmations: Option[Int] = None, maximumConfirmations: Option[Int] = None)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[UnspentTransactions]] = {

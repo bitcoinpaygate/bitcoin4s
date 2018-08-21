@@ -2,7 +2,7 @@ package com.bitcoinpaygate.bitcoin4s
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import com.bitcoinpaygate.bitcoin4s.ClientObjects.{RawTransactionInput, RawTransactionInputs, Recipients}
+import com.bitcoinpaygate.bitcoin4s.ClientObjects.{EstimateMode, RawTransactionInput, RawTransactionInputs, Recipients}
 import com.bitcoinpaygate.bitcoin4s.Responses.{GetNewAddress, UnspentTransaction}
 import org.scalatest.{AsyncWordSpec, Ignore, Matchers}
 
@@ -40,6 +40,11 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
     }
     "estimate fee" in {
       bitcoinClient.estimateFee().map { result =>
+        result shouldBe 'right
+      }
+    }
+    "estimate smart fee" in {
+      bitcoinClient.estimateSmartFee(6, Some(EstimateMode.CONSERVATIVE)).map { result =>
         result shouldBe 'right
       }
     }

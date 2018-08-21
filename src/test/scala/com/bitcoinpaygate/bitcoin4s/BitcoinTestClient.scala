@@ -58,6 +58,7 @@ class BitcoinTestClient(user: String, password: String, host: String, port: Int)
           case "createrawtransaction" => TestData.createRawTransaction
           case "signrawtransaction" => TestData.signRawTransaction
           case "sendrawtransaction" => TestData.sendRawTransaction
+          case "estimatesmartfee" => TestData.estimateSmartFee
 
           case _ => JsNumber(-1)
         }
