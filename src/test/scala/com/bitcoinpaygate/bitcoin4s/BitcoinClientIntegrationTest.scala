@@ -6,7 +6,7 @@ import com.bitcoinpaygate.bitcoin4s.ClientObjects._
 import com.bitcoinpaygate.bitcoin4s.Responses.{GetNewAddress, UnspentTransaction}
 import org.scalatest.{AsyncWordSpec, Ignore, Matchers}
 
-@Ignore
+@Ignore // This test check if BitcoinClient doesn't use deprecated methods. It's useful during bitcoind upgrade.
 class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
   implicit val actorSystem = ActorSystem("test")
   implicit val materializer = ActorMaterializer()
