@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
-import com.bitcoinpaygate.bitcoin4s.ClientObjects.{RawTransactionInputs, Recipients}
+import com.bitcoinpaygate.bitcoin4s.ClientObjects.{AddressType, EstimateMode, RawTransactionInputs, Recipients}
 import com.bitcoinpaygate.bitcoin4s.Responses._
 import spray.json._
 
@@ -59,10 +59,10 @@ class BitcoinClient(httpClient: HttpClient)(implicit system: ActorSystem, materi
     response.flatMap(unmarshalResponse[GetBlockChainInfo])
   }
 
-  def estimateFee(blocks: Option[Int] = None)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[EstimateFee]] = {
-    val request = httpClient.httpRequestWithParams("estimatefee", Vector(blocks.getOrElse(6)))
+  def estimateSmartFee(confTarget: Int, estimateMode: Option[EstimateMode.Value] = None)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[EstimateSmartFee]] = {
+    val request = httpClient.httpRequestWithParams("estimatesmartfee", confTarget +: estimateMode.map(_.toString).toVector)
     val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[EstimateFee])
+    response.flatMap(unmarshalResponse[EstimateSmartFee])
   }
 
   def listUnspentTransactions(minimumConfirmations: Option[Int] = None, maximumConfirmations: Option[Int] = None)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[UnspentTransactions]] = {
@@ -83,10 +83,10 @@ class BitcoinClient(httpClient: HttpClient)(implicit system: ActorSystem, materi
     response.flatMap(unmarshalResponse[GetNewAddress])
   }
 
-  def addWitnessAddress(address: String)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[AddWitnessAddress]] = {
-    val request = httpClient.httpRequestWithParams("addwitnessaddress", Vector(address))
+  def getNewAddress(account: Option[String], addressType: Option[AddressType.Value])(implicit executionContext: ExecutionContext): Future[BitcoinResponse[GetNewAddress]] = {
+    val request = httpClient.httpRequestWithParams("getnewaddress", account.getOrElse("") +: addressType.map(_.toString).toVector)
     val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[AddWitnessAddress])
+    response.flatMap(unmarshalResponse[GetNewAddress])
   }
 
   def sendFrom(account: String, to: String, amount: BigDecimal, confirmations: Option[Int])(implicit executionContext: ExecutionContext): Future[BitcoinResponse[SentTransactionId]] = {

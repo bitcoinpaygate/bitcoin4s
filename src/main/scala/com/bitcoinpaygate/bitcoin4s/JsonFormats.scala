@@ -11,7 +11,7 @@ private[bitcoin4s] trait JsonFormats extends SprayJsonSupport with DefaultJsonPr
 
   implicit val GetWalletInfoFormat: RootJsonFormat[GetWalletInfo] = jsonFormat7(GetWalletInfo)
   implicit val GetNetworkInfoFormat: RootJsonFormat[GetNetworkInfo] = jsonFormat9(GetNetworkInfo)
-  implicit val GetMiningInfoFormat: RootJsonFormat[GetMiningInfo] = jsonFormat12(GetMiningInfo)
+  implicit val GetMiningInfoFormat: RootJsonFormat[GetMiningInfo] = jsonFormat8(GetMiningInfo)
   implicit val GetMemPoolInfoFormat: RootJsonFormat[GetMemPoolInfo] = jsonFormat5(GetMemPoolInfo)
   implicit val GetBlockChainInfoFormat: RootJsonFormat[GetBlockChainInfo] = jsonFormat10(GetBlockChainInfo)
 
@@ -25,18 +25,12 @@ private[bitcoin4s] trait JsonFormats extends SprayJsonSupport with DefaultJsonPr
   implicit val ListSinceBlockResponseFormat: RootJsonFormat[ListSinceBlockResponse] = jsonFormat2(ListSinceBlockResponse)
 
   implicit val SignedRawTransactionFormat: RootJsonFormat[SignedRawTransaction] = jsonFormat2(SignedRawTransaction)
+  implicit val EstimateSmartFeeFormat: RootJsonFormat[EstimateSmartFee] = jsonFormat3(EstimateSmartFee)
 
   implicit object TransactionHexFormat extends RootJsonReader[TransactionHex] {
     override def read(json: JsValue): TransactionHex = json match {
       case JsString(hex) => TransactionHex(hex)
       case x             => deserializationError("Expected TransactionHex as JsString, but got " + x)
-    }
-  }
-
-  implicit object EstimateFeeFormat extends RootJsonReader[EstimateFee] {
-    override def read(json: JsValue): EstimateFee = json match {
-      case JsNumber(x) => EstimateFee(x)
-      case x           => deserializationError("Expected EstimateFee as JsNumber, but got " + x)
     }
   }
 
@@ -55,13 +49,6 @@ private[bitcoin4s] trait JsonFormats extends SprayJsonSupport with DefaultJsonPr
     override def read(json: JsValue): GetNewAddress = json match {
       case JsString(x) => GetNewAddress(x)
       case x           => deserializationError("Expected GetNewAddress as JsString, but got " + x)
-    }
-  }
-
-  implicit object AddWithessAddressFormat extends RootJsonReader[AddWitnessAddress] {
-    override def read(json: JsValue): AddWitnessAddress = json match {
-      case JsString(x) => AddWitnessAddress(x)
-      case x           => deserializationError("Expected AddWitnessAddress as JsString, but got " + x)
     }
   }
 

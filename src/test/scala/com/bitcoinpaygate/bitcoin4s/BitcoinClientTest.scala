@@ -2,7 +2,7 @@ package com.bitcoinpaygate.bitcoin4s
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import com.bitcoinpaygate.bitcoin4s.ClientObjects.{RawTransactionInput, RawTransactionInputs}
+import com.bitcoinpaygate.bitcoin4s.ClientObjects.{AddressType, RawTransactionInput, RawTransactionInputs}
 import com.bitcoinpaygate.bitcoin4s.Responses.GeneralErrorResponse
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.concurrent.ScalaFutures
@@ -63,10 +63,12 @@ class BitcoinClientTest extends FlatSpec with Matchers with ScalaFutures {
     }
   }
 
-  it should "estimate fee" in {
-    whenReady(bitcoinClient.estimateFee(Some(6))) {
-      case Left(_)    => throw new RuntimeException("unexpected bitcoind response")
-      case Right(fee) => fee.estimate shouldBe BigDecimal("0.00010244")
+  it should "estimate smart fee" in {
+    whenReady(bitcoinClient.estimateSmartFee(6)) {
+      case Left(_) => throw new RuntimeException("unexpected bitcoind response")
+      case Right(fee) =>
+        fee.feerate shouldBe Some(0.00010244)
+        fee.blocks shouldBe 6
     }
   }
 
@@ -100,10 +102,10 @@ class BitcoinClientTest extends FlatSpec with Matchers with ScalaFutures {
     }
   }
 
-  it should "add new witness address" in {
-    whenReady(bitcoinClient.addWitnessAddress("mhFaYEiuBV4Nc53PGh1FFGEjj7xrjnQYnB")) {
-      case Left(_)               => throw new RuntimeException("unexpected bitcoind response")
-      case Right(witnessAddress) => witnessAddress.address shouldBe "2N9pJLCWbaGbfvgD2vYFL3d7NP6ZmCPf6f8"
+  it should "return new address for p2sh-segwit address type" in {
+    whenReady(bitcoinClient.getNewAddress(None, Some(AddressType.P2SH_SEGWIT))) {
+      case Left(_)           => throw new RuntimeException("unexpected bitcoind response")
+      case Right(newAddress) => newAddress.address should have size 34
     }
   }
 
