@@ -1,15 +1,11 @@
 package com.bitcoinpaygate.bitcoin4s
 
-import akka.http.scaladsl.model._
 import spray.json._
-import akka.http.scaladsl.unmarshalling.Unmarshal
-import akka.stream.ActorMaterializer
 
-import scala.concurrent.{ExecutionContext, Future}
-import akka.http.scaladsl.model.MediaTypes.`application/json`
+trait TestDataHelper {
 
-class BitcoinTestClient(user: String, password: String, host: String, port: Int)(implicit materializer: ActorMaterializer, ec: ExecutionContext) extends HttpClient(user, password, host, port) {
-  private def extractMethod(entityJson: JsObject): (String, Vector[String]) = {
+  protected def extractMethod(body: String): (String, Vector[String]) = {
+    val entityJson = body.parseJson.asJsObject
     val method = entityJson.fields("method") match {
       case JsString(m) => m.toString
       case other       => deserializationError(s"expected method as String but got: $other")
@@ -30,10 +26,10 @@ class BitcoinTestClient(user: String, password: String, host: String, port: Int)
     (method, params.getOrElse(Vector.empty[String]))
   }
 
-  private def loadJsonResponseFromTestData(arg: (String, Vector[String])): JsValue = {
+  protected def loadJsonResponseFromTestData(arg: (String, Vector[String])): String = {
     arg match {
       case (method, params) =>
-        method match {
+        val json = method match {
           case _ if params.contains("parseError") => TestData.parseErrorResponse
           case "getwalletinfo" => TestData.walletInfoResponse
           case "getnetworkinfo" => TestData.networkInfoResponse
@@ -60,17 +56,7 @@ class BitcoinTestClient(user: String, password: String, host: String, port: Int)
 
           case _ => JsNumber(-1)
         }
+        json.prettyPrint
     }
-  }
-
-  override def performRequest(request: HttpRequest): Future[HttpResponse] = {
-    val entityJson = Unmarshal(request).to[String].map { r =>
-      r.parseJson.asJsObject
-    }
-
-    entityJson
-      .map(extractMethod)
-      .map(loadJsonResponseFromTestData)
-      .map(response => HttpResponse(entity = HttpEntity(`application/json`, response.prettyPrint)))
   }
 }

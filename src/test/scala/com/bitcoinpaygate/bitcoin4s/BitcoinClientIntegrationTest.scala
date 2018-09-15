@@ -1,16 +1,15 @@
 package com.bitcoinpaygate.bitcoin4s
 
-import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
 import com.bitcoinpaygate.bitcoin4s.ClientObjects._
 import com.bitcoinpaygate.bitcoin4s.Responses.{GetNewAddress, UnspentTransaction}
+import com.softwaremill.sttp.akkahttp.AkkaHttpBackend
 import org.scalatest.{AsyncWordSpec, Ignore, Matchers}
 
 @Ignore // This test check if BitcoinClient doesn't use deprecated methods. It's useful during bitcoind upgrade.
 class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
-  implicit val actorSystem = ActorSystem("test")
-  implicit val materializer = ActorMaterializer()
-  val bitcoinClient = new BitcoinClient("user", "password", "localhost", 18332)
+  implicit val akkaHttpBackend = AkkaHttpBackend()
+  implicit val monadError = akkaHttpBackend.responseMonad
+  val bitcoinClient = new BitcoinClient("user", "password", "localhost", 18443)
 
   "BitcoinClient" should {
     "get wallet info" in {

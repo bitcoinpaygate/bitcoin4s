@@ -1,10 +1,9 @@
 package com.bitcoinpaygate.bitcoin4s
 
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import com.bitcoinpaygate.bitcoin4s.ClientObjects.RawTransactionInput
 import spray.json._
 
-private[bitcoin4s] object HttpParamsConverter extends SprayJsonSupport with DefaultJsonProtocol {
+private[bitcoin4s] object HttpParamsConverter extends DefaultJsonProtocol {
   implicit val RawTransactionInputFormat: RootJsonFormat[RawTransactionInput] = jsonFormat3(RawTransactionInput)
   def rpcParamsToJson(params: Vector[Any]): Vector[String] = params.map {
     case param: Int                                => param.toString
