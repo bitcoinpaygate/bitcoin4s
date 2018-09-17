@@ -1,25 +1,19 @@
 package com.bitcoinpaygate.bitcoin4s
 
-import akka.actor.ActorSystem
-import akka.http.scaladsl.model._
-import akka.http.scaladsl.unmarshalling.Unmarshal
-import akka.stream.ActorMaterializer
 import com.bitcoinpaygate.bitcoin4s.ClientObjects.{AddressType, EstimateMode, RawTransactionInputs, Recipients}
 import com.bitcoinpaygate.bitcoin4s.Responses._
+import com.softwaremill.sttp._
 import spray.json._
 
-import scala.concurrent.{ExecutionContext, Future}
+case class BitcoinClient[R[_]](user: String, password: String, host: String, port: Int)(implicit sttpBackend: SttpBackend[R, Nothing]) extends JsonFormats {
+  implicit val monadError = sttpBackend.responseMonad
+  val request = sttp
+    .auth.basic(user, password)
+    .post(uri"http://$host:$port/")
 
-class BitcoinClient(httpClient: HttpClient)(implicit system: ActorSystem, materializer: ActorMaterializer) extends JsonFormats {
-
-  def this(user: String, password: String, host: String, port: Int)(implicit system: ActorSystem, materializer: ActorMaterializer) {
-    this(new AkkaHttpClient(user, password, host, port))
-  }
-
-  private def unmarshalResponse[T <: CorrectResponse](httpResponse: HttpResponse)(implicit executionContext: ExecutionContext, reader: JsonReader[T]): Future[BitcoinResponse[T]] = {
-    Unmarshal(httpResponse).to[String].map { r =>
+  private def as[T <: CorrectResponse](implicit reader: JsonReader[T]): ResponseAs[BitcoinResponse[T], Nothing] =
+    asString.map { r =>
       val responseObject = r.parseJson.asJsObject
-
       responseObject.fields("result") match {
         case JsNull =>
           Left(GeneralErrorResponse(responseObject.fields.get("error").map(_.toString).getOrElse("Unknown error")))
@@ -27,134 +21,149 @@ class BitcoinClient(httpClient: HttpClient)(implicit system: ActorSystem, materi
           Right(a.convertTo[T])
       }
     }
+
+  def walletInfo(): R[BitcoinResponse[GetWalletInfo]] =
+    request.body(method("getwalletinfo")).response(as[GetWalletInfo]).send()
+
+  def networkInfo(): R[BitcoinResponse[GetNetworkInfo]] =
+    request.body(method("getnetworkinfo")).response(as[GetNetworkInfo]).send()
+
+  def miningInfo(): R[BitcoinResponse[GetMiningInfo]] =
+    request.body(method("getmininginfo")).response(as[GetMiningInfo]).send()
+
+  def memPoolInfo(): R[BitcoinResponse[GetMemPoolInfo]] = {
+    request.body(method("getmempoolinfo")).response(as[GetMemPoolInfo]).send()
   }
 
-  def walletInfo(implicit executionContext: ExecutionContext): Future[BitcoinResponse[GetWalletInfo]] = {
-    val request = httpClient.httpRequest("getwalletinfo")
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[GetWalletInfo])
+  def blockchainInfo(): R[BitcoinResponse[GetBlockChainInfo]] = {
+    request.body(method("getblockchaininfo")).response(as[GetBlockChainInfo]).send()
+  }
+  def estimateSmartFee(confTarget: Int, estimateMode: Option[EstimateMode.Value] = None)(): R[BitcoinResponse[EstimateSmartFee]] = {
+    request
+      .body(method("estimatesmartfee", confTarget +: estimateMode.map(_.toString).toVector))
+      .response(as[EstimateSmartFee])
+      .send()
   }
 
-  def networkInfo(implicit executionContext: ExecutionContext): Future[BitcoinResponse[GetNetworkInfo]] = {
-    val request = httpClient.httpRequest("getnetworkinfo")
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[GetNetworkInfo])
+  def listUnspentTransactions(minimumConfirmations: Option[Int] = None, maximumConfirmations: Option[Int] = None)(): R[BitcoinResponse[UnspentTransactions]] = {
+    request
+      .body(method("listunspent", Vector(minimumConfirmations.getOrElse(1), maximumConfirmations.getOrElse(9999999))))
+      .response(as[UnspentTransactions])
+      .send()
   }
 
-  def miningInfo(implicit executionContext: ExecutionContext): Future[BitcoinResponse[GetMiningInfo]] = {
-    val request = httpClient.httpRequest("getmininginfo")
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[GetMiningInfo])
+  def listAccounts(confirmations: Option[Int] = None)(): R[BitcoinResponse[Accounts]] = {
+    request
+      .body(method("listaccounts", Vector(confirmations.getOrElse(0))))
+      .response(as[Accounts])
+      .send()
   }
 
-  def memPoolInfo(implicit executionContext: ExecutionContext): Future[BitcoinResponse[GetMemPoolInfo]] = {
-    val request = httpClient.httpRequest("getmempoolinfo")
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[GetMemPoolInfo])
+  def getNewAddress(account: Option[String] = None)(): R[BitcoinResponse[GetNewAddress]] = {
+    request
+      .body(method("getnewaddress", Vector(account).flatten))
+      .response(as[GetNewAddress])
+      .send()
   }
 
-  def blockchainInfo(implicit executionContext: ExecutionContext): Future[BitcoinResponse[GetBlockChainInfo]] = {
-    val request = httpClient.httpRequest("getblockchaininfo")
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[GetBlockChainInfo])
+  def getNewAddress(account: Option[String], addressType: Option[AddressType.Value])(): R[BitcoinResponse[GetNewAddress]] = {
+    request
+      .body(method("getnewaddress", account.getOrElse("") +: addressType.map(_.toString).toVector))
+      .response(as[GetNewAddress])
+      .send()
+  }
+  def sendFrom(account: String, to: String, amount: BigDecimal, confirmations: Option[Int])(): R[BitcoinResponse[SentTransactionId]] = {
+    request
+      .body(method("sendfrom", Vector(account, to, amount, confirmations.getOrElse(0))))
+      .response(as[SentTransactionId])
+      .send()
   }
 
-  def estimateSmartFee(confTarget: Int, estimateMode: Option[EstimateMode.Value] = None)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[EstimateSmartFee]] = {
-    val request = httpClient.httpRequestWithParams("estimatesmartfee", confTarget +: estimateMode.map(_.toString).toVector)
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[EstimateSmartFee])
+  def sendToAddress(to: String, amount: BigDecimal, comment: String = "", commentTo: String = "")(): R[BitcoinResponse[SentTransactionId]] = {
+    request
+      .body(method("sendtoaddress", Vector(to, amount, comment, commentTo)))
+      .response(as[SentTransactionId])
+      .send()
   }
 
-  def listUnspentTransactions(minimumConfirmations: Option[Int] = None, maximumConfirmations: Option[Int] = None)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[UnspentTransactions]] = {
-    val request = httpClient.httpRequestWithParams("listunspent", Vector(minimumConfirmations.getOrElse(1), maximumConfirmations.getOrElse(9999999)))
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[UnspentTransactions])
+  def setTxFee(btcPerKb: BigDecimal)(): R[BitcoinResponse[SetTxFee]] = {
+    request
+      .body(method("settxfee", Vector(btcPerKb)))
+      .response(as[SetTxFee])
+      .send()
   }
 
-  def listAccounts(confirmations: Option[Int] = None)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[Accounts]] = {
-    val request = httpClient.httpRequestWithParams("listaccounts", Vector(confirmations.getOrElse(0)))
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[Accounts])
+  def generate(number: Int)(): R[BitcoinResponse[HeaderHashes]] = {
+    request
+      .body(method("generate", Vector(number)))
+      .response(as[HeaderHashes])
+      .send()
   }
 
-  def getNewAddress(account: Option[String] = None)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[GetNewAddress]] = {
-    val request = httpClient.httpRequestWithParams("getnewaddress", Vector(account).flatten)
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[GetNewAddress])
+  def getTransaction(txid: String)(): R[BitcoinResponse[Transaction]] = {
+    request
+      .body(method("gettransaction", Vector(txid)))
+      .response(as[Transaction])
+      .send()
   }
 
-  def getNewAddress(account: Option[String], addressType: Option[AddressType.Value])(implicit executionContext: ExecutionContext): Future[BitcoinResponse[GetNewAddress]] = {
-    val request = httpClient.httpRequestWithParams("getnewaddress", account.getOrElse("") +: addressType.map(_.toString).toVector)
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[GetNewAddress])
+  def listSinceBlock(headerHash: String, targetConfirmations: Int = 1, includeWatchOnly: Boolean = false)(): R[BitcoinResponse[ListSinceBlockResponse]] = {
+    request
+      .body(method("listsinceblock", Vector(headerHash, targetConfirmations, includeWatchOnly)))
+      .response(as[ListSinceBlockResponse])
+      .send()
   }
 
-  def sendFrom(account: String, to: String, amount: BigDecimal, confirmations: Option[Int])(implicit executionContext: ExecutionContext): Future[BitcoinResponse[SentTransactionId]] = {
-    val request = httpClient.httpRequestWithParams("sendfrom", Vector(account, to, amount, confirmations.getOrElse(0)))
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[SentTransactionId])
+  def sendMany(account: String = "", recipients: ClientObjects.Recipients)(): R[BitcoinResponse[SentTransactionId]] = {
+    request
+      .body(method("sendmany", Vector(account, recipients)))
+      .response(as[SentTransactionId])
+      .send()
   }
 
-  def sendToAddress(to: String, amount: BigDecimal, comment: String = "", commentTo: String = "")(implicit executionContext: ExecutionContext): Future[BitcoinResponse[SentTransactionId]] = {
-    val request = httpClient.httpRequestWithParams("sendtoaddress", Vector(to, amount, comment, commentTo))
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[SentTransactionId])
+  def createRawTransaction(inputs: RawTransactionInputs, outputs: Recipients)(): R[BitcoinResponse[TransactionHex]] = {
+    request
+      .body(method("createrawtransaction", Vector(inputs, outputs)))
+      .response(as[TransactionHex])
+      .send()
   }
 
-  def setTxFee(btcPerKb: BigDecimal)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[SetTxFee]] = {
-    val request = httpClient.httpRequestWithParams("settxfee", Vector(btcPerKb))
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[SetTxFee])
+  def signRawTransaction(transactionHex: String)(): R[BitcoinResponse[SignedRawTransaction]] = {
+    request
+      .body(method("signrawtransaction", Vector(transactionHex)))
+      .response(as[SignedRawTransaction])
+      .send()
   }
 
-  def generate(number: Int)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[HeaderHashes]] = {
-    val request = httpClient.httpRequestWithParams("generate", Vector(number))
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[HeaderHashes])
+  def sendRawTransaction(signedHex: String)(): R[BitcoinResponse[SentTransactionId]] = {
+    request
+      .body(method("sendrawtransaction", Vector(signedHex)))
+      .response(as[SentTransactionId])
+      .send()
   }
 
-  def getTransaction(txid: String)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[Transaction]] = {
-    val request = httpClient.httpRequestWithParams("gettransaction", Vector(txid))
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[Transaction])
-  }
-
-  def listSinceBlock(headerHash: String, targetConfirmations: Int = 1, includeWatchOnly: Boolean = false)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[ListSinceBlockResponse]] = {
-    val request = httpClient.httpRequestWithParams("listsinceblock", Vector(headerHash, targetConfirmations, includeWatchOnly))
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[ListSinceBlockResponse])
-  }
-
-  def sendMany(account: String = "", recipients: ClientObjects.Recipients)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[SentTransactionId]] = {
-    val request = httpClient.httpRequestWithParams("sendmany", Vector(account, recipients))
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[SentTransactionId])
-  }
-
-  def createRawTransaction(inputs: RawTransactionInputs, outputs: Recipients)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[TransactionHex]] = {
-    val request = httpClient.httpRequestWithParams("createrawtransaction", Vector(inputs, outputs))
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[TransactionHex])
-  }
-
-  def signRawTransaction(transactionHex: String)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[SignedRawTransaction]] = {
-    val request = httpClient.httpRequestWithParams("signrawtransaction", Vector(transactionHex))
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[SignedRawTransaction])
-  }
-
-  def sendRawTransaction(signedHex: String)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[SentTransactionId]] = {
-    val request = httpClient.httpRequestWithParams("sendrawtransaction", Vector(signedHex))
-    val response = httpClient.performRequest(request)
-    response.flatMap(unmarshalResponse[SentTransactionId])
-  }
-
-  def sendRawTransaction(inputs: RawTransactionInputs, outputs: Recipients)(implicit executionContext: ExecutionContext): Future[BitcoinResponse[SentTransactionId]] = {
+  def sendRawTransaction(inputs: RawTransactionInputs, outputs: Recipients)(): R[BitcoinResponse[SentTransactionId]] = {
     (for {
       rawTransaction <- BitcoinResponseT(createRawTransaction(inputs, outputs))
       signedTransaction <- BitcoinResponseT(signRawTransaction(rawTransaction.hex))
       sentTransactionId <- BitcoinResponseT(sendRawTransaction(signedTransaction.hex))
     } yield sentTransactionId).value
+  }
+
+  private implicit def flatten[T <: CorrectResponse](response: R[Response[BitcoinResponse[T]]]): R[BitcoinResponse[T]] = {
+    import com.softwaremill.sttp.monadSyntax._
+    response.map { response =>
+      response.body.left.map(error => GeneralErrorResponse(error)).joinRight
+    }
+  }
+
+  private def method(methodName: String, params: Vector[Any] = Vector.empty) = {
+    if (params.isEmpty) {
+      s"""{"method": "$methodName"}"""
+    } else {
+      val formattedParams = HttpParamsConverter.rpcParamsToJson(params)
+      s"""{"method": "$methodName", "params": [${formattedParams.mkString(",")}]}"""
+    }
   }
 
 }

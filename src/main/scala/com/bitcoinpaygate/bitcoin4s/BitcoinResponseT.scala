@@ -1,19 +1,20 @@
 package com.bitcoinpaygate.bitcoin4s
 
 import com.bitcoinpaygate.bitcoin4s.Responses.{BitcoinResponse, CorrectResponse}
+import com.softwaremill.sttp.MonadError
 
-import scala.concurrent.{ExecutionContext, Future}
+case class BitcoinResponseT[R[_], A <: CorrectResponse](value: R[BitcoinResponse[A]])(implicit monadError: MonadError[R]) {
+  import com.softwaremill.sttp.monadSyntax._
 
-case class BitcoinResponseT[A <: CorrectResponse](value: Future[BitcoinResponse[A]]) {
-  def map[B <: CorrectResponse](f: A => B)(implicit executionContext: ExecutionContext): BitcoinResponseT[B] = {
+  def map[B <: CorrectResponse](f: A => B): BitcoinResponseT[R, B] = {
     BitcoinResponseT(value.map(_.map(f)))
   }
 
-  def flatMap[B <: CorrectResponse](f: A => BitcoinResponseT[B])(implicit executionContext: ExecutionContext): BitcoinResponseT[B] = {
+  def flatMap[B <: CorrectResponse](f: A => BitcoinResponseT[R, B]): BitcoinResponseT[R, B] = {
     BitcoinResponseT(
       value.flatMap {
         case Right(a)    => f(a).value
-        case Left(error) => Future.successful(Left(error))
+        case Left(error) => monadError.unit(Left(error))
       })
   }
 
