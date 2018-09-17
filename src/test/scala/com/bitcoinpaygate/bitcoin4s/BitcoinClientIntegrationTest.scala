@@ -9,31 +9,31 @@ import org.scalatest.{AsyncWordSpec, Ignore, Matchers}
 class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
   implicit val akkaHttpBackend = AkkaHttpBackend()
   implicit val monadError = akkaHttpBackend.responseMonad
-  val bitcoinClient = new BitcoinClient("user", "password", "localhost", 18443)
+  val bitcoinClient = BitcoinClient("user", "password", "localhost", 18443)
 
   "BitcoinClient" should {
     "get wallet info" in {
-      bitcoinClient.walletInfo.map { result =>
+      bitcoinClient.walletInfo().map { result =>
         result shouldBe 'right
       }
     }
     "get network info" in {
-      bitcoinClient.networkInfo.map { result =>
+      bitcoinClient.networkInfo().map { result =>
         result shouldBe 'right
       }
     }
     "get mining info" in {
-      bitcoinClient.miningInfo.map { result =>
+      bitcoinClient.miningInfo().map { result =>
         result shouldBe 'right
       }
     }
     "get mem pool info" in {
-      bitcoinClient.memPoolInfo.map { result =>
+      bitcoinClient.memPoolInfo().map { result =>
         result shouldBe 'right
       }
     }
     "get blockchain info" in {
-      bitcoinClient.blockchainInfo.map { result =>
+      bitcoinClient.blockchainInfo().map { result =>
         result shouldBe 'right
       }
     }
