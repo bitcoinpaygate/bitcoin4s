@@ -53,6 +53,7 @@ trait TestDataHelper {
           case "signrawtransaction" => TestData.signRawTransaction
           case "sendrawtransaction" => TestData.sendRawTransaction
           case "estimatesmartfee" => TestData.estimateSmartFee
+          case "validateaddress" => TestData.validateAddress
 
           case _ => JsNumber(-1)
         }

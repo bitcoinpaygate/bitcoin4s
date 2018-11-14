@@ -161,6 +161,11 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
         result shouldBe 'right
       }
     }
+    "validate address" in {
+      bitcoinClient.validateAddress("bcrt1qahztuh9phvwj8auphfeqsw5hfhphssjf3mze8k").map { result =>
+        result shouldBe 'right
+      }
+    }
   }
 
   private def rawTransactionInputs(unspentTransaction: UnspentTransaction): RawTransactionInputs =

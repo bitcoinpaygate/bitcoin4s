@@ -87,4 +87,12 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
       case x => deserializationError("Expected UnspentTransactions as JsArray[UnspentTransaction], but got " + x)
     }
   }
+
+  implicit object ValidateAddressFormat extends RootJsonReader[ValidateAddress] {
+    override def read(json: JsValue): ValidateAddress = json.asJsObject.getFields("isvalid") match {
+      case Seq(JsBoolean(x)) => ValidateAddress(x)
+      case x                 => deserializationError("Expected ValidateAddress as JsBoolean, but got " + x)
+    }
+  }
+
 }

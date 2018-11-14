@@ -143,4 +143,6 @@ object Responses {
 
   case class TransactionHex(hex: String) extends CorrectResponse
   case class SignedRawTransaction(hex: String, complete: Boolean) extends CorrectResponse
+
+  case class ValidateAddress(isvalid: Boolean) extends CorrectResponse
 }

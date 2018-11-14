@@ -230,4 +230,12 @@ class BitcoinClientTest extends FlatSpec with Matchers with TestDataHelper {
     }
   }
 
+  "validateaddress" should "return if address is valid" in {
+    val addr = "bcrt1qahztuh9phvwj8auphfeqsw5hfhphssjf3mze8k"
+    bitcoinClient.validateAddress(addr) match {
+      case Left(_)             => throw new RuntimeException("unexpected bitcoind response")
+      case Right(validAddress) => validAddress.isvalid shouldBe true
+    }
+  }
+
 }
