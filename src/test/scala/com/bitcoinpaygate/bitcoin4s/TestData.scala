@@ -26,6 +26,7 @@ object TestData {
   val signRawTransaction = readJson("sign-raw-transaction.json")
   val sendRawTransaction = readJson("send-raw-transaction.json")
   val estimateSmartFee = readJson("estimate-smart-fee-response.json")
+  val validateAddress = readJson("validate-address-response.json")
 
   private def readJson(name: String): JsValue = {
     val json = scala.io.Source.fromResource(name).getLines.mkString

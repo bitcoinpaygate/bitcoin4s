@@ -22,6 +22,9 @@ case class BitcoinClient[R[_]](user: String, password: String, host: String, por
       }
     }
 
+  private def asWithNoResultField[T <: CorrectResponse](implicit reader: JsonReader[T]): ResponseAs[BitcoinResponse[T], Nothing] =
+    asString.map(r => Right(r.parseJson.convertTo[T]))
+
   def walletInfo(): R[BitcoinResponse[GetWalletInfo]] =
     request.body(method("getwalletinfo")).response(as[GetWalletInfo]).send()
 
@@ -164,6 +167,13 @@ case class BitcoinClient[R[_]](user: String, password: String, host: String, por
       val formattedParams = HttpParamsConverter.rpcParamsToJson(params)
       s"""{"method": "$methodName", "params": [${formattedParams.mkString(",")}]}"""
     }
+  }
+
+  def validateAddress(address: String)(): R[BitcoinResponse[ValidateAddress]] = {
+    request
+      .body(method("validateaddress", Vector(address)))
+      .response(asWithNoResultField[ValidateAddress])
+      .send()
   }
 
 }
