@@ -179,6 +179,16 @@ class BitcoinClientTest extends FlatSpec with Matchers with TestDataHelper {
     }
   }
 
+  it should "get raw transaction by id" in {
+    val txid = "4528087ee62cc971be2d8dcf6c4b39d5603a0bc66cfb16c6f2448ea52f3cda3c"
+    bitcoinClient.getRawTransaction(txid) match {
+      case Left(_) => throw new RuntimeException("unexpected bitcoind response")
+      case Right(response) =>
+        response.confirmations shouldBe 374
+        response.vin should have size 1
+    }
+  }
+
   "listsinceblock" should "return hash of last block and list of transactions since given block" in {
     val blockhash = "4fed3588db4a6e40597620bd957beb959eacf502291e83a39898a740211727b8"
     val targetConfirmations = 3

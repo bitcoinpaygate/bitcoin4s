@@ -128,6 +128,12 @@ case class BitcoinClient[R[_]](
       .response(as[Transaction])
       .send()
 
+  def getRawTransaction(txid: String)(): R[BitcoinResponse[RawTransaction]] =
+    request
+      .body(method("getrawtransaction", Vector(txid)))
+      .response(as[RawTransaction])
+      .send()
+
   def listSinceBlock(
       headerHash: String,
       targetConfirmations: Int = 1,
