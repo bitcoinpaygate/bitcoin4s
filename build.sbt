@@ -9,10 +9,10 @@ scalaVersion := "2.12.8"
 organization := "bitcoinpaygate"
 
 libraryDependencies ++= {
-  val sttpVersion = "1.3.0"
-  val akkaVersion = "2.5.16"
+  val sttpVersion = "1.3.9"
+  val akkaVersion = "2.5.19"
   val scalaTestVersion = "3.0.5"
-  val sprayJsonVersion = "1.3.4"
+  val sprayJsonVersion = "1.3.5"
 
   Seq(
     "org.scalatest"         %% "scalatest"         % scalaTestVersion % "test",
