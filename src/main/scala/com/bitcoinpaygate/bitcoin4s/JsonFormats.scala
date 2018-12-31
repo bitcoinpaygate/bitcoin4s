@@ -20,8 +20,10 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
   implicit val TransactionDetailsFormat: RootJsonFormat[TransactionDetails] = jsonFormat8(TransactionDetails)
   implicit val TransactionFormat: RootJsonFormat[Transaction] = jsonFormat16(Transaction)
 
-  implicit val ListSinceBlockTransactionFormat: RootJsonFormat[ListSinceBlockTransaction] = jsonFormat19(ListSinceBlockTransaction)
-  implicit val ListSinceBlockResponseFormat: RootJsonFormat[ListSinceBlockResponse] = jsonFormat2(ListSinceBlockResponse)
+  implicit val ListSinceBlockTransactionFormat: RootJsonFormat[ListSinceBlockTransaction] = jsonFormat19(
+    ListSinceBlockTransaction)
+  implicit val ListSinceBlockResponseFormat: RootJsonFormat[ListSinceBlockResponse] = jsonFormat2(
+    ListSinceBlockResponse)
 
   implicit val SignedRawTransactionFormat: RootJsonFormat[SignedRawTransaction] = jsonFormat2(SignedRawTransaction)
   implicit val EstimateSmartFeeFormat: RootJsonFormat[EstimateSmartFee] = jsonFormat3(EstimateSmartFee)
@@ -36,7 +38,6 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
   implicit object AccountsFormat extends RootJsonReader[Accounts] {
     override def read(json: JsValue): Accounts = json match {
       case JsObject(x) =>
-
         Accounts(x.seq.map {
           case (accountId, balance) => Account(accountId, balance.convertTo[BigDecimal])
         }.toVector)
@@ -79,11 +80,10 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
   implicit object UnspentTransactionsFormat extends RootJsonReader[UnspentTransactions] {
     override def read(json: JsValue): UnspentTransactions = json match {
       case JsArray(unspentTransactions) =>
-        UnspentTransactions(
-          unspentTransactions.map {
-            case unspentTransaction: JsObject => unspentTransaction.convertTo[UnspentTransaction]
-            case other                        => deserializationError("Expected unspent transaction value as JsString, but got " + other)
-          })
+        UnspentTransactions(unspentTransactions.map {
+          case unspentTransaction: JsObject => unspentTransaction.convertTo[UnspentTransaction]
+          case other                        => deserializationError("Expected unspent transaction value as JsString, but got " + other)
+        })
       case x => deserializationError("Expected UnspentTransactions as JsArray[UnspentTransaction], but got " + x)
     }
   }

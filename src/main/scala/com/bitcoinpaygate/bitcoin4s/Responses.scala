@@ -19,7 +19,8 @@ object Responses {
       txcount: Int,
       keypoololdest: Int,
       keypoolsize: Int,
-      unlocked_until: Option[Int]) extends CorrectResponse
+      unlocked_until: Option[Int])
+      extends CorrectResponse
 
   case class GetNetworkInfo(
       version: Int,
@@ -30,7 +31,8 @@ object Responses {
       proxy: Option[String],
       relayfee: BigDecimal,
       localservices: String,
-      networks: Vector[Network]) extends CorrectResponse
+      networks: Vector[Network])
+      extends CorrectResponse
 
   case class GetMiningInfo(
       blocks: Int,
@@ -40,14 +42,16 @@ object Responses {
       networkhashps: Int,
       pooledtx: Int,
       chain: String,
-      warnings: String) extends CorrectResponse
+      warnings: String)
+      extends CorrectResponse
 
   case class GetMemPoolInfo(
       size: Int,
       bytes: Int,
       usage: Int,
       maxmempool: Int,
-      mempoolminfee: Int) extends CorrectResponse
+      mempoolminfee: Int)
+      extends CorrectResponse
 
   case class GetBlockChainInfo(
       chain: String,
@@ -59,9 +63,14 @@ object Responses {
       verificationprogress: BigDecimal,
       chainwork: String,
       pruned: Boolean,
-      pruneheight: Option[Int]) extends CorrectResponse
+      pruneheight: Option[Int])
+      extends CorrectResponse
 
-  case class EstimateSmartFee(feerate: Option[BigDecimal], errors: Option[List[String]], blocks: Int) extends CorrectResponse
+  case class EstimateSmartFee(
+      feerate: Option[BigDecimal],
+      errors: Option[List[String]],
+      blocks: Int)
+      extends CorrectResponse
 
   case class UnspentTransactions(unspentTransactions: Vector[UnspentTransaction]) extends CorrectResponse
 
@@ -78,9 +87,7 @@ object Responses {
 
   case class Accounts(accounts: Vector[Account]) extends CorrectResponse
 
-  case class Account(
-      accountId: String,
-      balance: BigDecimal) extends CorrectResponse
+  case class Account(accountId: String, balance: BigDecimal) extends CorrectResponse
 
   case class GetNewAddress(address: String) extends CorrectResponse
 
@@ -90,7 +97,8 @@ object Responses {
 
   case class SetTxFee(result: Boolean) extends CorrectResponse
 
-  case class ListSinceBlockResponse(transactions: List[ListSinceBlockTransaction], lastblock: String) extends CorrectResponse
+  case class ListSinceBlockResponse(transactions: List[ListSinceBlockTransaction], lastblock: String)
+      extends CorrectResponse
 
   case class ListSinceBlockTransaction(
       address: String,
@@ -129,7 +137,8 @@ object Responses {
       comment: Option[String],
       to: Option[String],
       details: List[TransactionDetails],
-      hex: String) extends CorrectResponse
+      hex: String)
+      extends CorrectResponse
 
   case class TransactionDetails(
       involvesWatchonly: Option[Boolean],

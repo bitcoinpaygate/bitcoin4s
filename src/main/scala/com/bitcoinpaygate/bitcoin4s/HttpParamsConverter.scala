@@ -5,6 +5,7 @@ import spray.json._
 
 private[bitcoin4s] object HttpParamsConverter extends DefaultJsonProtocol {
   implicit val RawTransactionInputFormat: RootJsonFormat[RawTransactionInput] = jsonFormat3(RawTransactionInput)
+
   def rpcParamsToJson(params: Vector[Any]): Vector[String] = params.map {
     case param: Int                                => param.toString
     case param: BigDecimal                         => param.toString

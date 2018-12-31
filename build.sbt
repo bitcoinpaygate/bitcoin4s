@@ -15,11 +15,11 @@ libraryDependencies ++= {
   val sprayJsonVersion = "1.3.4"
 
   Seq(
-    "org.scalatest" %% "scalatest" % scalaTestVersion % "test",
-    "io.spray" %% "spray-json" % sprayJsonVersion,
-    "com.softwaremill.sttp" %% "core" % sttpVersion,
+    "org.scalatest"         %% "scalatest"         % scalaTestVersion % "test",
+    "io.spray"              %% "spray-json"        % sprayJsonVersion,
+    "com.softwaremill.sttp" %% "core"              % sttpVersion,
     "com.softwaremill.sttp" %% "akka-http-backend" % sttpVersion,
-    "com.typesafe.akka" %% "akka-stream" % akkaVersion % "provided"
+    "com.typesafe.akka"     %% "akka-stream"       % akkaVersion % "provided"
   )
 }
 

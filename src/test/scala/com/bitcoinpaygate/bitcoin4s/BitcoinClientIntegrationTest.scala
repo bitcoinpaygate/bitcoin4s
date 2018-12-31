@@ -173,9 +173,8 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
 
   private def recipients(amount: BigDecimal, addresses: GetNewAddress*): Recipients = {
     val amountToSplit = (amount - 0.01) / addresses.length
-    Recipients(
-      addresses.map { address =>
-        address.address -> amountToSplit
-      }.toMap)
+    Recipients(addresses.map { address =>
+      address.address -> amountToSplit
+    }.toMap)
   }
 }
