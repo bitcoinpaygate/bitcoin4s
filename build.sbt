@@ -1,21 +1,16 @@
-import com.typesafe.sbt.SbtScalariform
-import com.typesafe.sbt.SbtScalariform.ScalariformKeys
-import scalariform.formatter.preferences._
-
 import scala.io.Source
 
 name := "bitcoin4s"
 
 version := Source.fromFile("VERSION").getLines.mkString
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.8"
 
 organization := "bitcoinpaygate"
 
 libraryDependencies ++= {
   val sttpVersion = "1.3.0"
   val akkaVersion = "2.5.16"
-  val akkaHttpVersion = "10.1.4"
   val scalaTestVersion = "3.0.5"
   val sprayJsonVersion = "1.3.4"
 
@@ -24,18 +19,9 @@ libraryDependencies ++= {
     "io.spray" %% "spray-json" % sprayJsonVersion,
     "com.softwaremill.sttp" %% "core" % sttpVersion,
     "com.softwaremill.sttp" %% "akka-http-backend" % sttpVersion,
-    "com.typesafe.akka" %% "akka-stream" % "2.5.13" % "provided"
+    "com.typesafe.akka" %% "akka-stream" % akkaVersion % "provided"
   )
 }
-
-scalacOptions --= Seq("-Xfatal-warnings")
-
-scalariformAutoformat := true
-ScalariformKeys.preferences := ScalariformKeys.preferences.value
-  .setPreference(AlignSingleLineCaseStatements, true)
-  .setPreference(DoubleIndentConstructorArguments, true)
-  .setPreference(SpacesAroundMultiImports, false)
-  .setPreference(CompactControlReadability, false)
 
 bintrayOrganization := Some("bitcoinpaygate")
 
@@ -62,3 +48,9 @@ val publishSettings =
       homepage := Some(url("https://github.com/bitcoinpaygate/bitcoin4s")),
       publishMavenStyle := false
     )
+
+scalafmtOnCompile := true
+
+addCommandAlias("testAll", ";test")
+addCommandAlias("formatAll", ";scalafmt;test:scalafmt;scalafmtSbt")
+addCommandAlias("compileAll", ";compile;test:compile")
