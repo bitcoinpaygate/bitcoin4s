@@ -140,6 +140,14 @@ object Responses {
       hex: String)
       extends CorrectResponse
 
+  case class TransactionInput(txid: String, vout: Long)
+
+  case class RawTransaction(
+      txid: String,
+      confirmations: Long,
+      vin: List[TransactionInput])
+      extends CorrectResponse
+
   case class TransactionDetails(
       involvesWatchonly: Option[Boolean],
       account: String,

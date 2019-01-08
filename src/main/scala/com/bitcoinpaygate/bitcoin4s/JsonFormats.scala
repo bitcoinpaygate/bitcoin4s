@@ -20,6 +20,9 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
   implicit val TransactionDetailsFormat: RootJsonFormat[TransactionDetails] = jsonFormat8(TransactionDetails)
   implicit val TransactionFormat: RootJsonFormat[Transaction] = jsonFormat16(Transaction)
 
+  implicit val TransactionInputFormat: RootJsonFormat[TransactionInput] = jsonFormat2(TransactionInput)
+  implicit val RawTransactionFormat: RootJsonFormat[RawTransaction] = jsonFormat3(RawTransaction)
+
   implicit val ListSinceBlockTransactionFormat: RootJsonFormat[ListSinceBlockTransaction] = jsonFormat19(
     ListSinceBlockTransaction)
   implicit val ListSinceBlockResponseFormat: RootJsonFormat[ListSinceBlockResponse] = jsonFormat2(
