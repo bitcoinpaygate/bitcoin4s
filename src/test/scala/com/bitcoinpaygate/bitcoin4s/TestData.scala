@@ -20,7 +20,7 @@ object TestData {
   val setTxFeeResponse = readJson("set-tx-fee-response.json")
   val setTxFeeOutOfRangeResponse = readJson("set-tx-tee-out-of-range-response.json")
   val getTransactionResponse = readJson("get-transaction-response.json")
-  val getRawTransactionResponse = readJson("get-raw-transaction-response.json")
+  val getRawTransactionResponseVerbose = readJson("get-raw-transaction-response-verbose.json")
   val listSinceBlockResponse = readJson("list-since-block-response.json")
   val sendManyResponse = readJson("send-many-response.json")
   val createRawTransaction = readJson("create-raw-transaction.json")

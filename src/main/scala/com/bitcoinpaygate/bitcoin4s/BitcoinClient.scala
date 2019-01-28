@@ -128,9 +128,9 @@ case class BitcoinClient[R[_]](
       .response(as[Transaction])
       .send()
 
-  def getRawTransaction(txid: String)(): R[BitcoinResponse[RawTransaction]] =
+  def getRawTransactionVerbose(txid: String)(): R[BitcoinResponse[RawTransaction]] =
     request
-      .body(method("getrawtransaction", Vector(txid)))
+      .body(method("getrawtransaction", Vector(txid, true)))
       .response(as[RawTransaction])
       .send()
 
