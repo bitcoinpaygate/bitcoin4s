@@ -5,6 +5,8 @@ import com.bitcoinpaygate.bitcoin4s.Responses._
 import com.softwaremill.sttp._
 import spray.json._
 
+import scala.util.{Failure, Success, Try}
+
 case class BitcoinClient[R[_]](
     user: String,
     password: String,
@@ -24,8 +26,11 @@ case class BitcoinClient[R[_]](
       responseObject.fields("result") match {
         case JsNull =>
           Left(GeneralErrorResponse(responseObject.fields.get("error").map(_.toString).getOrElse("Unknown error")))
-        case a: JsValue =>
-          Right(a.convertTo[T])
+        case json: JsValue =>
+          Try(json.convertTo[T]) match {
+            case Success(success) => Right(success)
+            case Failure(_)       => Left(GeneralErrorResponse(s"Error parsing JSON, got: " + json.compactPrint))
+          }
       }
     }
 

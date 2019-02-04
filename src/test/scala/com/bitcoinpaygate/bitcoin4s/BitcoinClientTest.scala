@@ -17,10 +17,10 @@ class BitcoinClientTest extends FlatSpec with Matchers with TestDataHelper {
     case RequestT(Method.POST, uri, body: StringBody, _, _, _, _) if uri == uri"http://$host:$port/" =>
       Response.ok(loadJsonResponseFromTestData(extractMethod(body.s)))
   }
-  val bitcoinClient = new BitcoinClient(user, password, host, port)
+  val bitcoinClient = BitcoinClient(user, password, host, port)
 
   it should "return walletinfo" in {
-    bitcoinClient.walletInfo match {
+    bitcoinClient.walletInfo() match {
       case Left(_) => throw new RuntimeException("unexpected bitcoind response")
       case Right(walletInfo) =>
         walletInfo.balance shouldBe BigDecimal("1.65751751")
@@ -184,7 +184,6 @@ class BitcoinClientTest extends FlatSpec with Matchers with TestDataHelper {
     bitcoinClient.getRawTransactionVerbose(txid) match {
       case Left(_) => throw new RuntimeException("unexpected bitcoind response")
       case Right(response) =>
-        response.confirmations shouldBe 374
         response.vin should have size 1
     }
   }
@@ -250,6 +249,12 @@ class BitcoinClientTest extends FlatSpec with Matchers with TestDataHelper {
       case Left(_)             => throw new RuntimeException("unexpected bitcoind response")
       case Right(validAddress) => validAddress.isvalid shouldBe true
     }
+  }
+
+  "any endpoint" should "return error for error response" in {
+    val response = bitcoinClient.validateAddress("invalid-json")
+    val leftValue = response.left.getOrElse(throw new RuntimeException("This should return Left"))
+    leftValue.errorMessage shouldBe "Error parsing JSON, got: {\"immature_balance\":0,\"paytxfee\":0}"
   }
 
 }
