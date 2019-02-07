@@ -10,7 +10,6 @@ object TestData {
   val memPoolInfoResponse = readJson("mem-pool-info-response.json")
   val blockchainInfoResponse = readJson("blockchain-info-response.json")
   val listUnspentResponse = readJson("list-unspent-response.json")
-  val listAccountsResponse = readJson("list-accounts-response.json")
   val getNewAddressResponse = readJson("get-new-address-response.json")
   val sendFromResponse = readJson("send-from-response.json")
   val sendToAddressResponse = sendFromResponse

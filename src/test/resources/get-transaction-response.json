@@ -17,15 +17,13 @@
       "amount": -10.00000000,
       "address": "moh4u3yuX6AwiQLzqXLDaVoe4UCMYj6jf5",
       "category": "send",
-      "account": "",
       "fee": -0.10000000
     }, {
       "label": "",
       "vout": 0,
       "amount": 10.00000000,
       "address": "moh4u3yuX6AwiQLzqXLDaVoe4UCMYj6jf5",
-      "category": "receive",
-      "account": ""
+      "category": "receive"
     }],
     "time": 1517481250,
     "timereceived": 1517481250,
