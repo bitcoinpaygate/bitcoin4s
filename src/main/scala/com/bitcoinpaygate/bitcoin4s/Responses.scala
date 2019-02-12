@@ -146,7 +146,7 @@ object Responses {
   case class RawTransaction(
       txid: String,
       vin: List[Either[TransactionInput, CoinbaseInput]],
-      confirmations: Long)
+      confirmations: Option[Long])
       extends CorrectResponse
 
   case class TransactionDetails(
