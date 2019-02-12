@@ -48,6 +48,7 @@ trait TestDataHelper {
           case "settxfee" if params(0).toDouble < 0                 => TestData.setTxFeeOutOfRangeResponse
           case "settxfee"                                           => TestData.setTxFeeResponse
           case "gettransaction"                                     => TestData.getTransactionResponse
+          case "getrawtransaction"   if params.contains("transaction-with-coinbase")                               => TestData.getRawTransactionResponseVerboseCoinbase
           case "getrawtransaction"                                  => TestData.getRawTransactionResponseVerbose
           case "listsinceblock"                                     => TestData.listSinceBlockResponse
           case "sendmany"                                           => TestData.sendManyResponse

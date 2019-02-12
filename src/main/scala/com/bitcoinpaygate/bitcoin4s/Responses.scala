@@ -141,8 +141,13 @@ object Responses {
       extends CorrectResponse
 
   case class TransactionInput(txid: String, vout: Long)
+  case class CoinbaseInput(coinbase: String, sequence: Long)
 
-  case class RawTransaction(txid: String, vin: List[TransactionInput]) extends CorrectResponse
+  case class RawTransaction(
+      txid: String,
+      vin: List[Either[TransactionInput, CoinbaseInput]],
+      confirmations: Long)
+      extends CorrectResponse
 
   case class TransactionDetails(
       involvesWatchonly: Option[Boolean],
