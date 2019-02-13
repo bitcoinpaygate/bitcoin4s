@@ -185,6 +185,17 @@ class BitcoinClientTest extends FlatSpec with Matchers with TestDataHelper {
       case Left(_) => throw new RuntimeException("unexpected bitcoind response")
       case Right(response) =>
         response.vin should have size 1
+        response.vin.head.left.get.txid shouldBe "2ac0daff49a4ff82a35a4864797f99f23c396b0529c5ba1e04b3d7b97521feba"
+    }
+  }
+
+  it should "get raw transaction by id - coinbase as input" in {
+    val txid = "transaction-with-coinbase"
+    bitcoinClient.getRawTransactionVerbose(txid) match {
+      case Left(_) => throw new RuntimeException("unexpected bitcoind response")
+      case Right(response) =>
+        response.vin should have size 1
+        response.vin.head.right.get.coinbase shouldBe "02d1060101"
     }
   }
 
