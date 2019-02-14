@@ -84,13 +84,6 @@ class BitcoinClientTest extends FlatSpec with Matchers with TestDataHelper {
     }
   }
 
-  it should "return accounts" in {
-    bitcoinClient.listAccounts() match {
-      case Left(_)         => throw new RuntimeException("unexpected bitcoind response")
-      case Right(accounts) => accounts.accounts.size shouldBe 3
-    }
-  }
-
   it should "return new address for default account" in {
     bitcoinClient.getNewAddress() match {
       case Left(_)           => throw new RuntimeException("unexpected bitcoind response")
@@ -109,22 +102,6 @@ class BitcoinClientTest extends FlatSpec with Matchers with TestDataHelper {
     bitcoinClient.getNewAddress(None, Some(AddressType.P2SH_SEGWIT)) match {
       case Left(_)           => throw new RuntimeException("unexpected bitcoind response")
       case Right(newAddress) => newAddress.address should have size 34
-    }
-  }
-
-  it should "sendfrom should send and return transation id" in {
-    bitcoinClient.sendFrom("testaccount", "nt54hMq9ghkvTBqmw3BoLjPBGBPWU1RexJ", 0.001, None) match {
-      case Left(_)              => throw new RuntimeException("unexpected bitcoind response")
-      case Right(transactionId) => transactionId.id should have size 64
-    }
-  }
-
-  it should "sendfrom should insufficient handle errors" in {
-    bitcoinClient.sendFrom("insufficientFunds", "nt54hMq9ghkvTBqmw3BoLjPBGBPWU1RexJ", 0.001, None) match {
-      case Left(x) =>
-        x shouldBe a[GeneralErrorResponse]
-        x.errorMessage.parseJson shouldBe TestData.insufficientFundsResponse.asJsObject.fields("error")
-      case Right(_) => throw new RuntimeException("expected invalid bitcoind response")
     }
   }
 

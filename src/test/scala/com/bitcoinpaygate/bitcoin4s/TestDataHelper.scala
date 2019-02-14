@@ -38,11 +38,9 @@ trait TestDataHelper {
           case "getmempoolinfo"                                   => TestData.memPoolInfoResponse
           case "getblockchaininfo"                                => TestData.blockchainInfoResponse
           case "listunspent"                                      => TestData.listUnspentResponse
-          case "listaccounts"                                     => TestData.listAccountsResponse
           case "getnewaddress"                                    => TestData.getNewAddressResponse
           case "generate"                                         => TestData.generateResponse
           case "sendfrom" if params.contains("insufficientFunds") => TestData.insufficientFundsResponse
-          case "sendfrom"                                         => TestData.sendFromResponse
           case "sendtoaddress" if params(1).toDouble > 100        => TestData.insufficientFundsResponse
           case "sendtoaddress"                                    => TestData.sendToAddressResponse
           case "settxfee" if params(0).toDouble < 0               => TestData.setTxFeeOutOfRangeResponse
