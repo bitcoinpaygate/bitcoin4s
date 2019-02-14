@@ -69,12 +69,6 @@ case class BitcoinClient[R[_]](
       .response(as[UnspentTransactions])
       .send()
 
-  def listAccounts(confirmations: Option[Int] = None)(): R[BitcoinResponse[Accounts]] =
-    request
-      .body(method("listaccounts", Vector(confirmations.getOrElse(0))))
-      .response(as[Accounts])
-      .send()
-
   def getNewAddress(account: Option[String] = None)(): R[BitcoinResponse[GetNewAddress]] =
     request
       .body(method("getnewaddress", Vector(account).flatten))
@@ -89,18 +83,6 @@ case class BitcoinClient[R[_]](
     request
       .body(method("getnewaddress", account.getOrElse("") +: addressType.map(_.toString).toVector))
       .response(as[GetNewAddress])
-      .send()
-
-  def sendFrom(
-      account: String,
-      to: String,
-      amount: BigDecimal,
-      confirmations: Option[Int]
-    )(
-    ): R[BitcoinResponse[SentTransactionId]] =
-    request
-      .body(method("sendfrom", Vector(account, to, amount, confirmations.getOrElse(0))))
-      .response(as[SentTransactionId])
       .send()
 
   def sendToAddress(

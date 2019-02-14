@@ -47,11 +47,6 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
         result shouldBe 'right
       }
     }
-    "list accounts" in {
-      bitcoinClient.listAccounts().map { result =>
-        result shouldBe 'right
-      }
-    }
     "get new address" in {
       bitcoinClient.getNewAddress().map { result =>
         result shouldBe 'right
@@ -64,17 +59,6 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
     }
     "get new address with type" in {
       bitcoinClient.getNewAddress(None, Some(AddressType.LEGACY)).map { result =>
-        result shouldBe 'right
-      }
-    }
-
-    "send from" in {
-      val sendFrom = (for {
-        newAddress <- BitcoinResponseT(bitcoinClient.getNewAddress())
-        sendFrom <- BitcoinResponseT(bitcoinClient.sendFrom("", newAddress.address, 10, Some(2)))
-      } yield sendFrom).value
-
-      sendFrom.map { result =>
         result shouldBe 'right
       }
     }
