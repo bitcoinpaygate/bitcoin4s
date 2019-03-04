@@ -69,19 +69,19 @@ case class BitcoinClient[R[_]](
       .response(as[UnspentTransactions])
       .send()
 
-  def getNewAddress(account: Option[String] = None)(): R[BitcoinResponse[GetNewAddress]] =
+  def getNewAddress(): R[BitcoinResponse[GetNewAddress]] =
     request
-      .body(method("getnewaddress", Vector(account).flatten))
+      .body(method("getnewaddress"))
       .response(as[GetNewAddress])
       .send()
 
   def getNewAddress(
-      account: Option[String],
+      label: Option[String],
       addressType: Option[AddressType.Value]
     )(
     ): R[BitcoinResponse[GetNewAddress]] =
     request
-      .body(method("getnewaddress", account.getOrElse("") +: addressType.map(_.toString).toVector))
+      .body(method("getnewaddress", label.getOrElse("") +: addressType.map(_.toString).toVector))
       .response(as[GetNewAddress])
       .send()
 
@@ -132,9 +132,9 @@ case class BitcoinClient[R[_]](
       .response(as[ListSinceBlockResponse])
       .send()
 
-  def sendMany(account: String = "", recipients: ClientObjects.Recipients)(): R[BitcoinResponse[SentTransactionId]] =
+  def sendMany(recipients: ClientObjects.Recipients)(): R[BitcoinResponse[SentTransactionId]] =
     request
-      .body(method("sendmany", Vector(account, recipients)))
+      .body(method("sendmany", Vector("", recipients)))
       .response(as[SentTransactionId])
       .send()
 
@@ -146,7 +146,7 @@ case class BitcoinClient[R[_]](
 
   def signRawTransaction(transactionHex: String)(): R[BitcoinResponse[SignedRawTransaction]] =
     request
-      .body(method("signrawtransaction", Vector(transactionHex)))
+      .body(method("signrawtransactionwithwallet", Vector(transactionHex)))
       .response(as[SignedRawTransaction])
       .send()
 

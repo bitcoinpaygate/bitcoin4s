@@ -78,16 +78,11 @@ object Responses {
       txid: String,
       vout: Int,
       address: String,
-      account: Option[String],
       scriptPubKey: String,
       amount: BigDecimal,
       confirmations: Long,
       spendable: Boolean,
       solvable: Boolean)
-
-  case class Accounts(accounts: Vector[Account]) extends CorrectResponse
-
-  case class Account(accountId: String, balance: BigDecimal) extends CorrectResponse
 
   case class GetNewAddress(address: String) extends CorrectResponse
 
@@ -151,7 +146,6 @@ object Responses {
 
   case class TransactionDetails(
       involvesWatchonly: Option[Boolean],
-      account: String,
       address: Option[String],
       category: String,
       amount: BigDecimal,

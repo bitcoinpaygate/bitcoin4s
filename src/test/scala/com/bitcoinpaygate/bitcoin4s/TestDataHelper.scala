@@ -52,7 +52,7 @@ trait TestDataHelper {
           case "listsinceblock"                                     => TestData.listSinceBlockResponse
           case "sendmany"                                           => TestData.sendManyResponse
           case "createrawtransaction"                               => TestData.createRawTransaction
-          case "signrawtransaction"                                 => TestData.signRawTransaction
+          case "signrawtransactionwithwallet"                       => TestData.signRawTransactionWithWallet
           case "sendrawtransaction"                                 => TestData.sendRawTransaction
           case "estimatesmartfee"                                   => TestData.estimateSmartFee
           case "validateaddress" if params.contains("invalid-json") => TestData.invalidJsonResponse

@@ -51,11 +51,6 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
         result shouldBe 'right
       }
     }
-    "get new address for account" in {
-      bitcoinClient.getNewAddress(Some("account")).map { result =>
-        result shouldBe 'right
-      }
-    }
     "get new address with type" in {
       bitcoinClient.getNewAddress(None, Some(AddressType.LEGACY)).map { result =>
         result shouldBe 'right
@@ -107,7 +102,7 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
       val sendMany = (for {
         newAddress1 <- BitcoinResponseT(bitcoinClient.getNewAddress())
         newAddress2 <- BitcoinResponseT(bitcoinClient.getNewAddress())
-        sendMany <- BitcoinResponseT(bitcoinClient.sendMany("", recipients(1, newAddress1, newAddress2)))
+        sendMany <- BitcoinResponseT(bitcoinClient.sendMany(recipients(1, newAddress1, newAddress2)))
       } yield sendMany).value
 
       sendMany.map { result =>
