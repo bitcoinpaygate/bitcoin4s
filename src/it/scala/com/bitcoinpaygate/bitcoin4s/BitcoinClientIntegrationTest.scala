@@ -88,6 +88,17 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
         result shouldBe 'right
       }
     }
+    "get raw transaction" in {
+      val rawTransaction = (for {
+        unspentTransaction <- BitcoinResponseT(bitcoinClient.listUnspentTransactions())
+        transaction <- BitcoinResponseT(
+          bitcoinClient.getRawTransactionVerbose(unspentTransaction.unspentTransactions.head.txid))
+      } yield transaction).value
+
+      rawTransaction.map { result =>
+        result shouldBe 'right
+      }
+    }
     "list since block" in {
       val listSinceBlock = (for {
         hash <- BitcoinResponseT(bitcoinClient.generate(1))
