@@ -46,8 +46,26 @@ jobs:
           name: Unit tests
           command: cat /dev/null | sbt test
 
+  integration:
+    docker:
+      - image: circleci/openjdk:11-jdk
+      - image: bitcoinpaygate/regtest-bitcoind-cluster:0.16.3
+    working_directory: ~/repo
+    environment:
+      TERM: dumb
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.sbt" }}
+            - v1-dependencies-
+
+      - run: sbt it:test
+
 workflows:
   version: 2
   build_and_integration:
     jobs:
       - build
+      - integration
