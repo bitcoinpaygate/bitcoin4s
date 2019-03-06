@@ -49,7 +49,7 @@ jobs:
           command: cat /dev/null | sbt coverage test coverageReport
 
       - codecov/upload:
-          file: {{ coverage_report_filepath }}
+          file: "target/scala-2.12/scoverage-report/scoverage.xml"
 
   integration:
     docker:
