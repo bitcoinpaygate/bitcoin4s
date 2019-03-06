@@ -69,19 +69,19 @@ case class BitcoinClient[R[_]](
       .response(as[UnspentTransactions])
       .send()
 
-  def getNewAddress(account: Option[String] = None)(): R[BitcoinResponse[GetNewAddress]] =
+  def getNewAddress(): R[BitcoinResponse[GetNewAddress]] =
     request
-      .body(method("getnewaddress", Vector(account).flatten))
+      .body(method("getnewaddress"))
       .response(as[GetNewAddress])
       .send()
 
   def getNewAddress(
-      account: Option[String],
+      label: Option[String],
       addressType: Option[AddressType.Value]
     )(
     ): R[BitcoinResponse[GetNewAddress]] =
     request
-      .body(method("getnewaddress", account.getOrElse("") +: addressType.map(_.toString).toVector))
+      .body(method("getnewaddress", label.getOrElse("") +: addressType.map(_.toString).toVector))
       .response(as[GetNewAddress])
       .send()
 
@@ -132,9 +132,9 @@ case class BitcoinClient[R[_]](
       .response(as[ListSinceBlockResponse])
       .send()
 
-  def sendMany(account: String = "", recipients: ClientObjects.Recipients)(): R[BitcoinResponse[SentTransactionId]] =
+  def sendMany(recipients: ClientObjects.Recipients)(): R[BitcoinResponse[SentTransactionId]] =
     request
-      .body(method("sendmany", Vector(account, recipients)))
+      .body(method("sendmany", Vector("", recipients)))
       .response(as[SentTransactionId])
       .send()
 
@@ -146,7 +146,7 @@ case class BitcoinClient[R[_]](
 
   def signRawTransaction(transactionHex: String)(): R[BitcoinResponse[SignedRawTransaction]] =
     request
-      .body(method("signrawtransaction", Vector(transactionHex)))
+      .body(method("signrawtransactionwithwallet", Vector(transactionHex)))
       .response(as[SignedRawTransaction])
       .send()
 
@@ -162,6 +162,12 @@ case class BitcoinClient[R[_]](
       signedTransaction <- BitcoinResponseT(signRawTransaction(rawTransaction.hex))
       sentTransactionId <- BitcoinResponseT(sendRawTransaction(signedTransaction.hex))
     } yield sentTransactionId).value
+
+  def validateAddress(address: String)(): R[BitcoinResponse[ValidateAddress]] =
+    request
+      .body(method("validateaddress", Vector(address)))
+      .response(as[ValidateAddress])
+      .send()
 
   implicit private def flatten[T <: CorrectResponse](
       response: R[Response[BitcoinResponse[T]]]
@@ -179,11 +185,4 @@ case class BitcoinClient[R[_]](
       val formattedParams = HttpParamsConverter.rpcParamsToJson(params)
       s"""{"method": "$methodName", "params": [${formattedParams.mkString(",")}]}"""
     }
-
-  def validateAddress(address: String)(): R[BitcoinResponse[ValidateAddress]] =
-    request
-      .body(method("validateaddress", Vector(address)))
-      .response(as[ValidateAddress])
-      .send()
-
 }

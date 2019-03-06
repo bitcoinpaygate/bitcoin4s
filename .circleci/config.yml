@@ -54,7 +54,7 @@ jobs:
   integration:
     docker:
       - image: circleci/openjdk:11-jdk
-      - image: bitcoinpaygate/regtest-bitcoind-cluster:0.16.3
+      - image: bitcoinpaygate/regtest-bitcoind-cluster:0.17.1
     working_directory: ~/repo
     environment:
       TERM: dumb

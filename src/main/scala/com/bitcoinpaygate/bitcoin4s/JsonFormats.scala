@@ -14,10 +14,9 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
   implicit val GetMemPoolInfoFormat: RootJsonFormat[GetMemPoolInfo] = jsonFormat5(GetMemPoolInfo)
   implicit val GetBlockChainInfoFormat: RootJsonFormat[GetBlockChainInfo] = jsonFormat10(GetBlockChainInfo)
 
-  implicit val UnspentTransactionFormat: RootJsonFormat[UnspentTransaction] = jsonFormat9(UnspentTransaction)
-  implicit val AccountFormat: RootJsonFormat[Account] = jsonFormat2(Account)
+  implicit val UnspentTransactionFormat: RootJsonFormat[UnspentTransaction] = jsonFormat8(UnspentTransaction)
 
-  implicit val TransactionDetailsFormat: RootJsonFormat[TransactionDetails] = jsonFormat8(TransactionDetails)
+  implicit val TransactionDetailsFormat: RootJsonFormat[TransactionDetails] = jsonFormat7(TransactionDetails)
   implicit val TransactionFormat: RootJsonFormat[Transaction] = jsonFormat16(Transaction)
 
   implicit val TransactionInputFormat: RootJsonFormat[TransactionInput] = jsonFormat2(TransactionInput)
@@ -36,16 +35,6 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
     override def read(json: JsValue): TransactionHex = json match {
       case JsString(hex) => TransactionHex(hex)
       case x             => deserializationError("Expected TransactionHex as JsString, but got " + x)
-    }
-  }
-
-  implicit object AccountsFormat extends RootJsonReader[Accounts] {
-    override def read(json: JsValue): Accounts = json match {
-      case JsObject(x) =>
-        Accounts(x.seq.map {
-          case (accountId, balance) => Account(accountId, balance.convertTo[BigDecimal])
-        }.toVector)
-      case x => deserializationError("Expected Vector[Account] as Json Map, but got " + x)
     }
   }
 

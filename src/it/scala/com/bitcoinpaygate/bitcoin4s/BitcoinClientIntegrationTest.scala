@@ -51,11 +51,6 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
         result shouldBe 'right
       }
     }
-    "get new address for account" in {
-      bitcoinClient.getNewAddress(Some("account")).map { result =>
-        result shouldBe 'right
-      }
-    }
     "get new address with type" in {
       bitcoinClient.getNewAddress(None, Some(AddressType.LEGACY)).map { result =>
         result shouldBe 'right
@@ -93,6 +88,17 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
         result shouldBe 'right
       }
     }
+    "get raw transaction" in {
+      val rawTransaction = (for {
+        unspentTransaction <- BitcoinResponseT(bitcoinClient.listUnspentTransactions())
+        transaction <- BitcoinResponseT(
+          bitcoinClient.getRawTransactionVerbose(unspentTransaction.unspentTransactions.head.txid))
+      } yield transaction).value
+
+      rawTransaction.map { result =>
+        result shouldBe 'right
+      }
+    }
     "list since block" in {
       val listSinceBlock = (for {
         hash <- BitcoinResponseT(bitcoinClient.generate(1))
@@ -107,7 +113,7 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
       val sendMany = (for {
         newAddress1 <- BitcoinResponseT(bitcoinClient.getNewAddress())
         newAddress2 <- BitcoinResponseT(bitcoinClient.getNewAddress())
-        sendMany <- BitcoinResponseT(bitcoinClient.sendMany("", recipients(1, newAddress1, newAddress2)))
+        sendMany <- BitcoinResponseT(bitcoinClient.sendMany(recipients(1, newAddress1, newAddress2)))
       } yield sendMany).value
 
       sendMany.map { result =>
