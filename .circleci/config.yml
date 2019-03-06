@@ -1,0 +1,53 @@
+# Scala CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/sample-config/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:11-jdk
+
+    working_directory: ~/repo
+
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.sbt" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run:
+          name: Style check
+          command: |
+            sbt formatAll
+            if [[ -n $(git diff --name-only) ]]; then
+              echo "These files are not formatted correctly:" && git diff --name-only && exit 1;
+            fi
+
+      - run:
+          name: Compile
+          command: cat /dev/null | sbt compileAll
+
+      - save_cache:
+          paths:
+            - ~/.m2
+            - ~/.ivy2
+          key: v1-dependencies--{{ checksum "build.sbt" }}
+
+      - run:
+          name: Unit tests
+          command: cat /dev/null | sbt test
+
+workflows:
+  version: 2
+  build_and_integration:
+    jobs:
+      - build
