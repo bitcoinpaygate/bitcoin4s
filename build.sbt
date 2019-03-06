@@ -1,4 +1,5 @@
 import scala.io.Source
+import org.scalafmt.sbt.ScalafmtPlugin._
 
 name := "bitcoin4s"
 
@@ -15,11 +16,11 @@ libraryDependencies ++= {
   val sprayJsonVersion = "1.3.5"
 
   Seq(
-    "org.scalatest"         %% "scalatest"         % scalaTestVersion % "test",
+    "org.scalatest"         %% "scalatest"         % scalaTestVersion % "test,it",
     "io.spray"              %% "spray-json"        % sprayJsonVersion,
     "com.softwaremill.sttp" %% "core"              % sttpVersion,
     "com.softwaremill.sttp" %% "akka-http-backend" % sttpVersion,
-    "com.typesafe.akka"     %% "akka-stream"       % akkaVersion % "provided"
+    "com.typesafe.akka"     %% "akka-stream"       % akkaVersion % "provided,test,it"
   )
 }
 
@@ -51,6 +52,15 @@ val publishSettings =
 
 scalafmtOnCompile := true
 
-addCommandAlias("testAll", ";test")
-addCommandAlias("formatAll", ";scalafmt;test:scalafmt;scalafmtSbt")
-addCommandAlias("compileAll", ";compile;test:compile")
+lazy val IntegrationTest = config("it") extend Test
+
+lazy val root = (project in file("."))
+  .configs(IntegrationTest)
+  .settings(
+    Defaults.itSettings,
+    inConfig(IntegrationTest)(scalafmtConfigSettings)
+  )
+
+addCommandAlias("testAll", ";test;it:test")
+addCommandAlias("formatAll", ";scalafmt;test:scalafmt;it:scalafmt;scalafmtSbt")
+addCommandAlias("compileAll", ";compile;test:compile;it:compile")
