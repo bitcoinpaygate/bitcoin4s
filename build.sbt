@@ -1,5 +1,6 @@
-import scala.io.Source
 import org.scalafmt.sbt.ScalafmtPlugin._
+
+import scala.io.Source
 
 name := "bitcoin4s"
 
