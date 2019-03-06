@@ -3,9 +3,8 @@ package com.bitcoinpaygate.bitcoin4s
 import com.bitcoinpaygate.bitcoin4s.ClientObjects._
 import com.bitcoinpaygate.bitcoin4s.Responses.{GetNewAddress, UnspentTransaction}
 import com.softwaremill.sttp.akkahttp.AkkaHttpBackend
-import org.scalatest.{AsyncWordSpec, Ignore, Matchers}
+import org.scalatest.{AsyncWordSpec, Matchers}
 
-@Ignore // This test check if BitcoinClient doesn't use deprecated methods. It's useful during bitcoind upgrade.
 class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
   implicit val akkaHttpBackend = AkkaHttpBackend()
   implicit val monadError = akkaHttpBackend.responseMonad

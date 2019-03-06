@@ -2,7 +2,7 @@
 
 This is a scala wrapper for the `bitcoin-rpc` interface.
 
-[![Build Status](https://travis-ci.org/bitcoinpaygate/bitcoin4s.svg)](https://travis-ci.org/bitcoinpaygate/bitcoin4s)
+[![CircleCI](https://circleci.com/gh/bitcoinpaygate/bitcoin4s.svg?style=svg)](https://circleci.com/gh/bitcoinpaygate/bitcoin4s)
 [![Download](https://api.bintray.com/packages/bitcoinpaygate/bitcoinpaygate-maven/bitcoin4s/images/download.svg)](https://bintray.com/bitcoinpaygate/bitcoinpaygate-maven/bitcoin4s/_latestVersion)
 
 # Features
