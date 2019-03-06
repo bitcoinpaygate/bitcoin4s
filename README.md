@@ -9,16 +9,25 @@ This is a scala wrapper for the `bitcoin-rpc` interface.
 
 Currently we implement a subset of `json-rpc` operations, including:
 
-* `sendmany`
 * `getwalletinfo`
-* `estimatefee`
+* `getnetworkinfo`
+* `getmininginfo`
+* `getmempoolinfo`
+* `getblockchaininfo`
+* `estimatesmartfee`
 * `listunspent`
 * `getnewaddress`
-* `sendfrom`
 * `sendtoaddress`
 * `settxfee`
-* `listsinceblock`
+* `generate`
 * `gettransaction`
+* `getrawtransaction`
+* `listsinceblock`
+* `sendmany`
+* `createrawtransaction`
+* `signrawtransaction`
+* `sendrawtransaction`
+* `validateaddress`
 
 Project is designed in a way that it's easy to add new operations any time.
 
