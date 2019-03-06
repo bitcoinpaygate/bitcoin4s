@@ -32,7 +32,9 @@ jobs:
               echo "These files are not formatted correctly:" && git diff --name-only && exit 1;
             fi
 
-      - run: cat /dev/null | sbt compileAll
+      - run:
+          name: Compile
+          command: cat /dev/null | sbt compileAll
 
       - save_cache:
           paths:
