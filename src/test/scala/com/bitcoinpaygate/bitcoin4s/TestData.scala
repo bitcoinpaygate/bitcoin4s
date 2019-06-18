@@ -11,6 +11,7 @@ object TestData {
   val blockchainInfoResponse = readJson("blockchain-info-response.json")
   val listUnspentResponse = readJson("list-unspent-response.json")
   val getNewAddressResponse = readJson("get-new-address-response.json")
+  val getRawChangeAddressResponse = readJson("get-raw-change-address-response.json")
   val sendToAddressResponse = readJson("sendtoaddress-response.json")
   val generateResponse = readJson("generate-response.json")
   val parseErrorResponse = readJson("parse-error-response.json")

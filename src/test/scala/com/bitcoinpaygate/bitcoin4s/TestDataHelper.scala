@@ -39,6 +39,7 @@ trait TestDataHelper {
           case "getblockchaininfo"                                => TestData.blockchainInfoResponse
           case "listunspent"                                      => TestData.listUnspentResponse
           case "getnewaddress"                                    => TestData.getNewAddressResponse
+          case "getrawchangeaddress"                              => TestData.getRawChangeAddressResponse
           case "generate"                                         => TestData.generateResponse
           case "sendfrom" if params.contains("insufficientFunds") => TestData.insufficientFundsResponse
           case "sendtoaddress" if params(1).toDouble > 100        => TestData.insufficientFundsResponse
