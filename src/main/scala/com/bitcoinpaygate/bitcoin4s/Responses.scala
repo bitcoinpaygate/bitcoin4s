@@ -86,6 +86,8 @@ object Responses {
 
   case class GetNewAddress(address: String) extends CorrectResponse
 
+  case class GetRawChangeAddress(address: String) extends CorrectResponse
+
   case class SentTransactionId(id: String) extends CorrectResponse
 
   case class HeaderHashes(hashes: Seq[String]) extends CorrectResponse
@@ -136,11 +138,14 @@ object Responses {
       extends CorrectResponse
 
   case class TransactionInput(txid: String, vout: Long)
+  case class TransactionOutput(value: BigDecimal, n: Long)
   case class CoinbaseInput(coinbase: String, sequence: Long)
 
   case class RawTransaction(
       txid: String,
+      size: Int,
       vin: List[Either[TransactionInput, CoinbaseInput]],
+      vout: List[TransactionOutput],
       confirmations: Option[Long])
       extends CorrectResponse
 

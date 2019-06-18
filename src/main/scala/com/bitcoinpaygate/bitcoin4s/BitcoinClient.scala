@@ -85,6 +85,12 @@ case class BitcoinClient[R[_]](
       .response(as[GetNewAddress])
       .send()
 
+  def getRawChangeAddress(addressType: Option[AddressType.Value] = None): R[BitcoinResponse[GetRawChangeAddress]] =
+    request
+      .body(method("getrawchangeaddress", addressType.map(_.toString).toVector))
+      .response(as[GetRawChangeAddress])
+      .send()
+
   def sendToAddress(
       to: String,
       amount: BigDecimal,
