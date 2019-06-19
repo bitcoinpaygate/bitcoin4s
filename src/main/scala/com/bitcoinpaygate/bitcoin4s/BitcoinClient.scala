@@ -11,14 +11,20 @@ case class BitcoinClient[R[_]](
     user: String,
     password: String,
     host: String,
-    port: Int
+    port: Int,
+    wallet: Option[String] = None
   )(implicit sttpBackend: SttpBackend[R, Nothing])
     extends JsonFormats {
   implicit val monadError = sttpBackend.responseMonad
 
-  val request = sttp.auth
-    .basic(user, password)
-    .post(uri"http://$host:$port/")
+  val request = {
+    val defaultWalletName = ""
+    val walletName = wallet.getOrElse(defaultWalletName)
+    val uri = uri"http://$host:$port/wallet/$walletName"
+    sttp.auth
+      .basic(user, password)
+      .post(uri)
+  }
 
   private def as[T <: CorrectResponse](implicit reader: JsonReader[T]): ResponseAs[BitcoinResponse[T], Nothing] =
     asString.map { r =>
@@ -191,4 +197,13 @@ case class BitcoinClient[R[_]](
       val formattedParams = HttpParamsConverter.rpcParamsToJson(params)
       s"""{"method": "$methodName", "params": [${formattedParams.mkString(",")}]}"""
     }
+
+  def createWallet(walletName: String): R[BitcoinResponse[CreateWallet]] =
+    request
+      .body(method("createwallet", Vector(walletName)))
+      .response(as[CreateWallet])
+      .send()
+
+  def changeWallet(wallet: Option[String]): BitcoinClient[R] = this.copy(wallet = wallet)
+
 }
