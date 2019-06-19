@@ -20,8 +20,9 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
   implicit val TransactionFormat: RootJsonFormat[Transaction] = jsonFormat16(Transaction)
 
   implicit val TransactionInputFormat: RootJsonFormat[TransactionInput] = jsonFormat2(TransactionInput)
+  implicit val TransactionOutputFormat: RootJsonFormat[TransactionOutput] = jsonFormat2(TransactionOutput)
   implicit val CoinbaseInputFormat: RootJsonFormat[CoinbaseInput] = jsonFormat2(CoinbaseInput)
-  implicit val RawTransactionFormat: RootJsonFormat[RawTransaction] = jsonFormat3(RawTransaction)
+  implicit val RawTransactionFormat: RootJsonFormat[RawTransaction] = jsonFormat5(RawTransaction)
 
   implicit val ListSinceBlockTransactionFormat: RootJsonFormat[ListSinceBlockTransaction] = jsonFormat19(
     ListSinceBlockTransaction)
@@ -42,6 +43,13 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
     override def read(json: JsValue): GetNewAddress = json match {
       case JsString(x) => GetNewAddress(x)
       case x           => deserializationError("Expected GetNewAddress as JsString, but got " + x)
+    }
+  }
+
+  implicit object GetRawChangeAddressFormat extends RootJsonReader[GetRawChangeAddress] {
+    override def read(json: JsValue): GetRawChangeAddress = json match {
+      case JsString(x) => GetRawChangeAddress(x)
+      case x           => deserializationError("Expected GetRawChangeAddress as JsString, but got " + x)
     }
   }
 

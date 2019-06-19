@@ -98,6 +98,13 @@ class BitcoinClientTest extends FlatSpec with Matchers with TestDataHelper {
     }
   }
 
+  it should "return change address" in {
+    bitcoinClient.getRawChangeAddress() match {
+      case Left(_)           => throw new RuntimeException("unexpected bitcoind response")
+      case Right(newAddress) => newAddress.address shouldBe "2MwP1MeoK9EiHLcrV2cMSgAsdnba7tnyurc"
+    }
+  }
+
   it should "new address should handle parse error" in {
     bitcoinClient.getNewAddress(Some("parseError"), None) match {
       case Left(x) =>
