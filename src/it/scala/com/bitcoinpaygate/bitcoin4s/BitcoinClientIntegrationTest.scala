@@ -155,6 +155,17 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
         result shouldBe 'right
       }
     }
+
+    "get change address" in {
+      val result = bitcoinClient.getRawChangeAddress(Some(AddressType.BECH32))
+      result.map(_ shouldBe 'right)
+    }
+
+    "create new wallet in" in {
+      val newWalletName = System.nanoTime().toString
+      val result = bitcoinClient.createWallet(newWalletName)
+      result.map(_.right.get.name shouldBe newWalletName)
+    }
   }
 
   private def rawTransactionInputs(unspentTransaction: UnspentTransaction): RawTransactionInputs =

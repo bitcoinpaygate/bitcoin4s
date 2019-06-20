@@ -14,7 +14,7 @@ class BitcoinClientTest extends FlatSpec with Matchers with TestDataHelper {
   val port = 1337
 
   implicit val stubBackend = SttpBackendStub.synchronous.whenRequestMatchesPartial {
-    case RequestT(Method.POST, uri, body: StringBody, _, _, _, _) if uri == uri"http://$host:$port/" =>
+    case RequestT(Method.POST, uri, body: StringBody, _, _, _, _) if uri == uri"http://$host:$port/wallet/" =>
       Response.ok(loadJsonResponseFromTestData(extractMethod(body.s)))
   }
   val bitcoinClient = BitcoinClient(user, password, host, port)
@@ -236,6 +236,13 @@ class BitcoinClientTest extends FlatSpec with Matchers with TestDataHelper {
     bitcoinClient.validateAddress(addr) match {
       case Left(_)             => throw new RuntimeException("unexpected bitcoind response")
       case Right(validAddress) => validAddress.isvalid shouldBe true
+    }
+  }
+  "createwallet" should "return the name of created wallet" in {
+    val walletName = "foo"
+    bitcoinClient.createWallet(walletName) match {
+      case Left(_)     => throw new RuntimeException("unexpected bitcoind response")
+      case Right(resp) => resp.name shouldBe walletName
     }
   }
 

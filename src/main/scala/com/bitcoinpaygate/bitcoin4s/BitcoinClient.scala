@@ -204,6 +204,4 @@ case class BitcoinClient[R[_]](
       .response(as[CreateWallet])
       .send()
 
-  def changeWallet(wallet: Option[String]): BitcoinClient[R] = this.copy(wallet = wallet)
-
 }
