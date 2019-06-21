@@ -31,6 +31,7 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
 
   implicit val SignedRawTransactionFormat: RootJsonFormat[SignedRawTransaction] = jsonFormat2(SignedRawTransaction)
   implicit val EstimateSmartFeeFormat: RootJsonFormat[EstimateSmartFee] = jsonFormat3(EstimateSmartFee)
+  implicit val CreateWalletFormat: RootJsonFormat[CreateWallet] = jsonFormat1(CreateWallet)
 
   implicit object TransactionHexFormat extends RootJsonReader[TransactionHex] {
     override def read(json: JsValue): TransactionHex = json match {
