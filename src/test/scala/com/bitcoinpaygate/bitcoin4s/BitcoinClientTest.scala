@@ -34,7 +34,8 @@ class BitcoinClientTest extends FlatSpec with Matchers with TestDataHelper {
       case Right(generated) =>
         generated.hashes should contain theSameElementsAs Seq(
           "36252b5852a5921bdfca8701f936b39edeb1f8c39fffe73b0d8437921401f9af",
-          "5f2956817db1e386759aa5794285977c70596b39ea093b9eab0aa4ba8cd50c06")
+          "5f2956817db1e386759aa5794285977c70596b39ea093b9eab0aa4ba8cd50c06"
+        )
     }
   }
 
@@ -200,7 +201,8 @@ class BitcoinClientTest extends FlatSpec with Matchers with TestDataHelper {
   "createrawtransaction" should "return transaction hex" in {
     val hex = "02000000000180969800000000001976a914f5b32cc7579d678b60780846128b0f98f74cd10e88ac00000000"
     val inputs = RawTransactionInputs(
-      List(RawTransactionInput("b5d1a82d7fd1f0e566bb0aabed172019854e2dff0ae729dc446beefd17c5c0cc", 1, None)))
+      List(RawTransactionInput("b5d1a82d7fd1f0e566bb0aabed172019854e2dff0ae729dc446beefd17c5c0cc", 1, None))
+    )
     val outputs = ClientObjects.Recipients(Map("address1" -> 0.1, "address2" -> 0.3))
     bitcoinClient.createRawTransaction(inputs, outputs) match {
       case Left(_)               => throw new RuntimeException("unexpected bitcoind response")
