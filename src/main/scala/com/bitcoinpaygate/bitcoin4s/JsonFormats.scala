@@ -53,6 +53,7 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
   }
 
   implicit object GetRawChangeAddressFormat extends RootJsonReader[GetRawChangeAddress] {
+
     override def read(json: JsValue): GetRawChangeAddress = json match {
       case JsString(x) => GetRawChangeAddress(x)
       case x           => deserializationError("Expected GetRawChangeAddress as JsString, but got " + x)
