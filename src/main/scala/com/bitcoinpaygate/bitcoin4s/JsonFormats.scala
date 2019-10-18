@@ -25,15 +25,19 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
   implicit val RawTransactionFormat: RootJsonFormat[RawTransaction] = jsonFormat5(RawTransaction)
 
   implicit val ListSinceBlockTransactionFormat: RootJsonFormat[ListSinceBlockTransaction] = jsonFormat19(
-    ListSinceBlockTransaction)
+    ListSinceBlockTransaction
+  )
+
   implicit val ListSinceBlockResponseFormat: RootJsonFormat[ListSinceBlockResponse] = jsonFormat2(
-    ListSinceBlockResponse)
+    ListSinceBlockResponse
+  )
 
   implicit val SignedRawTransactionFormat: RootJsonFormat[SignedRawTransaction] = jsonFormat2(SignedRawTransaction)
   implicit val EstimateSmartFeeFormat: RootJsonFormat[EstimateSmartFee] = jsonFormat3(EstimateSmartFee)
   implicit val CreateWalletFormat: RootJsonFormat[CreateWallet] = jsonFormat1(CreateWallet)
 
   implicit object TransactionHexFormat extends RootJsonReader[TransactionHex] {
+
     override def read(json: JsValue): TransactionHex = json match {
       case JsString(hex) => TransactionHex(hex)
       case x             => deserializationError("Expected TransactionHex as JsString, but got " + x)
@@ -41,6 +45,7 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
   }
 
   implicit object GetNewAddressFormat extends RootJsonReader[GetNewAddress] {
+
     override def read(json: JsValue): GetNewAddress = json match {
       case JsString(x) => GetNewAddress(x)
       case x           => deserializationError("Expected GetNewAddress as JsString, but got " + x)
@@ -55,6 +60,7 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
   }
 
   implicit object SentTransactionIdFormat extends RootJsonReader[SentTransactionId] {
+
     override def read(json: JsValue): SentTransactionId = json match {
       case JsString(x) => SentTransactionId(x)
       case x           => deserializationError("Expected SentTransactionId as JsString, but got " + x)
@@ -62,6 +68,7 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
   }
 
   implicit object HeaderHashesFormat extends RootJsonReader[HeaderHashes] {
+
     override def read(json: JsValue): HeaderHashes = json match {
       case JsArray(hashes) =>
         HeaderHashes(hashes.map {
@@ -73,6 +80,7 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
   }
 
   implicit object SetTxFeeFormat extends RootJsonReader[SetTxFee] {
+
     override def read(json: JsValue): SetTxFee = json match {
       case JsBoolean(x) => SetTxFee(x)
       case x            => deserializationError("Expected SetTxFee as JsBoolean, but got " + x)
@@ -80,6 +88,7 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
   }
 
   implicit object UnspentTransactionsFormat extends RootJsonReader[UnspentTransactions] {
+
     override def read(json: JsValue): UnspentTransactions = json match {
       case JsArray(unspentTransactions) =>
         UnspentTransactions(unspentTransactions.map {
@@ -91,6 +100,7 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
   }
 
   implicit object ValidateAddressFormat extends RootJsonReader[ValidateAddress] {
+
     override def read(json: JsValue): ValidateAddress = json.asJsObject.getFields("isvalid") match {
       case Seq(JsBoolean(x)) => ValidateAddress(x)
       case x                 => deserializationError("Expected ValidateAddress as JsBoolean, but got " + x)

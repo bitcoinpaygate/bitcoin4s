@@ -92,7 +92,8 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
       val rawTransaction = (for {
         unspentTransaction <- BitcoinResponseT(bitcoinClient.listUnspentTransactions())
         transaction <- BitcoinResponseT(
-          bitcoinClient.getRawTransactionVerbose(unspentTransaction.unspentTransactions.head.txid))
+          bitcoinClient.getRawTransactionVerbose(unspentTransaction.unspentTransactions.head.txid)
+        )
       } yield transaction).value
 
       rawTransaction.map { result =>
@@ -128,7 +129,9 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
         createRawTransaction <- BitcoinResponseT(
           bitcoinClient.createRawTransaction(
             rawTransactionInputs(input.unspentTransactions.head),
-            recipients(input.unspentTransactions.head.amount, newAddress1, newAddress2)))
+            recipients(input.unspentTransactions.head.amount, newAddress1, newAddress2)
+          )
+        )
       } yield createRawTransaction).value
 
       createRawTransaction.map { result =>
@@ -143,7 +146,9 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
         sendRawTransaction <- BitcoinResponseT(
           bitcoinClient.sendRawTransaction(
             rawTransactionInputs(input.unspentTransactions.head),
-            recipients(input.unspentTransactions.head.amount, newAddress1, newAddress2)))
+            recipients(input.unspentTransactions.head.amount, newAddress1, newAddress2)
+          )
+        )
       } yield sendRawTransaction).value
 
       sendRawTransaction.map { result =>
