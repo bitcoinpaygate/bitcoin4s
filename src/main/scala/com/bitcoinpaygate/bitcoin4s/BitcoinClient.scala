@@ -40,19 +40,19 @@ case class BitcoinClient[R[_]](
       }
     }
 
-  def walletInfo(): R[BitcoinResponse[GetWalletInfo]] =
+  def walletInfo: R[BitcoinResponse[GetWalletInfo]] =
     request.body(method("getwalletinfo")).response(as[GetWalletInfo]).send()
 
-  def networkInfo(): R[BitcoinResponse[GetNetworkInfo]] =
+  def networkInfo: R[BitcoinResponse[GetNetworkInfo]] =
     request.body(method("getnetworkinfo")).response(as[GetNetworkInfo]).send()
 
-  def miningInfo(): R[BitcoinResponse[GetMiningInfo]] =
+  def miningInfo: R[BitcoinResponse[GetMiningInfo]] =
     request.body(method("getmininginfo")).response(as[GetMiningInfo]).send()
 
-  def memPoolInfo(): R[BitcoinResponse[GetMemPoolInfo]] =
+  def memPoolInfo: R[BitcoinResponse[GetMemPoolInfo]] =
     request.body(method("getmempoolinfo")).response(as[GetMemPoolInfo]).send()
 
-  def blockchainInfo(): R[BitcoinResponse[GetBlockChainInfo]] =
+  def blockchainInfo: R[BitcoinResponse[GetBlockChainInfo]] =
     request.body(method("getblockchaininfo")).response(as[GetBlockChainInfo]).send()
 
   def estimateSmartFee(
