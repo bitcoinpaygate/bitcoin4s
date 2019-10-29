@@ -137,14 +137,16 @@ object Responses {
       hex: String)
       extends CorrectResponse
 
-  case class TransactionInput(txid: String, vout: Long)
+  sealed trait Input
+  case class TransactionInput(txid: String, vout: Long) extends Input
+  case class CoinbaseInput(coinbase: String, sequence: Long) extends Input
+
   case class TransactionOutput(value: BigDecimal, n: Long)
-  case class CoinbaseInput(coinbase: String, sequence: Long)
 
   case class RawTransaction(
       txid: String,
       size: Int,
-      vin: List[Either[TransactionInput, CoinbaseInput]],
+      vin: List[Input],
       vout: List[TransactionOutput],
       confirmations: Option[Long])
       extends CorrectResponse

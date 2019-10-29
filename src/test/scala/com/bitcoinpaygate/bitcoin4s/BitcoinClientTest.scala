@@ -1,7 +1,7 @@
 package com.bitcoinpaygate.bitcoin4s
 
 import com.bitcoinpaygate.bitcoin4s.ClientObjects.{AddressType, RawTransactionInput, RawTransactionInputs}
-import com.bitcoinpaygate.bitcoin4s.Responses.GeneralErrorResponse
+import com.bitcoinpaygate.bitcoin4s.Responses.{CoinbaseInput, GeneralErrorResponse, TransactionInput}
 import com.softwaremill.sttp._
 import com.softwaremill.sttp.testing.SttpBackendStub
 import org.scalatest.{FlatSpec, Matchers}
@@ -20,7 +20,7 @@ class BitcoinClientTest extends FlatSpec with Matchers with TestDataHelper {
   val bitcoinClient = BitcoinClient(user, password, host, port)
 
   it should "return walletinfo" in {
-    bitcoinClient.walletInfo() match {
+    bitcoinClient.walletInfo match {
       case Left(_) => throw new RuntimeException("unexpected bitcoind response")
       case Right(walletInfo) =>
         walletInfo.balance shouldBe BigDecimal("1.65751751")
@@ -163,7 +163,11 @@ class BitcoinClientTest extends FlatSpec with Matchers with TestDataHelper {
       case Left(_) => throw new RuntimeException("unexpected bitcoind response")
       case Right(response) =>
         response.vin should have size 1
-        response.vin.head.left.get.txid shouldBe "2ac0daff49a4ff82a35a4864797f99f23c396b0529c5ba1e04b3d7b97521feba"
+        val txId = response.vin.head match {
+          case in: TransactionInput => in.txid
+          case _                    => throw new RuntimeException("not expected")
+        }
+        txId shouldBe "2ac0daff49a4ff82a35a4864797f99f23c396b0529c5ba1e04b3d7b97521feba"
     }
   }
 
@@ -173,7 +177,12 @@ class BitcoinClientTest extends FlatSpec with Matchers with TestDataHelper {
       case Left(_) => throw new RuntimeException("unexpected bitcoind response")
       case Right(response) =>
         response.vin should have size 1
-        response.vin.head.right.get.coinbase shouldBe "02d1060101"
+        val coinbase = response.vin.head match {
+          case c: CoinbaseInput => c.coinbase
+          case _                => throw new RuntimeException("not expected")
+        }
+
+        coinbase shouldBe "02d1060101"
     }
   }
 

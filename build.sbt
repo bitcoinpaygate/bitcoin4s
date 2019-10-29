@@ -64,5 +64,5 @@ lazy val root = (project in file("."))
 
 addCommandAlias("testAll", ";test")
 addCommandAlias("formatAll", ";scalafmtAll;test:scalafmtAll;scalafmtSbt")
-addCommandAlias("compileAll", ";compile;test:compile")
+addCommandAlias("compileAll", ";compile;test:compile;it:compile")
 addCommandAlias("checkFormatAll", ";scalafmtCheckAll;scalafmtSbtCheck")

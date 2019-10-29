@@ -1,6 +1,6 @@
 package com.bitcoinpaygate.bitcoin4s
 
-import com.bitcoinpaygate.bitcoin4s.Responses._
+import com.bitcoinpaygate.bitcoin4s.Responses.{Input, _}
 import spray.json._
 
 private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
@@ -22,6 +22,21 @@ private[bitcoin4s] trait JsonFormats extends DefaultJsonProtocol {
   implicit val TransactionInputFormat: RootJsonFormat[TransactionInput] = jsonFormat2(TransactionInput)
   implicit val TransactionOutputFormat: RootJsonFormat[TransactionOutput] = jsonFormat2(TransactionOutput)
   implicit val CoinbaseInputFormat: RootJsonFormat[CoinbaseInput] = jsonFormat2(CoinbaseInput)
+
+  implicit object InputFormat extends RootJsonFormat[Input] {
+
+    override def write(obj: Input): JsValue = obj match {
+      case in: TransactionInput    => in.toJson
+      case coinbase: CoinbaseInput => coinbase.toJson
+    }
+
+    override def read(json: JsValue): Input =
+      if (json.asJsObject.fields.get("coinbase").isDefined)
+        json.convertTo[CoinbaseInput]
+      else
+        json.convertTo[TransactionInput]
+  }
+
   implicit val RawTransactionFormat: RootJsonFormat[RawTransaction] = jsonFormat5(RawTransaction)
 
   implicit val ListSinceBlockTransactionFormat: RootJsonFormat[ListSinceBlockTransaction] = jsonFormat19(
