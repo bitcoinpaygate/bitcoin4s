@@ -1,18 +1,18 @@
 package com.bitcoinpaygate.bitcoin4s
 
-case class Address(
+final case class Address(
     address: String,
     port: Int,
     score: Int)
 
-case class Network(
+final case class Network(
     name: String,
     limited: Boolean,
     reachable: Boolean,
     proxy: String,
     localaddress: Option[Vector[Address]])
 
-case class Softfork(
+final case class Softfork(
     id: String,
     version: Int,
     enforce: Option[Int],

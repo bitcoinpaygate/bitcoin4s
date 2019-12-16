@@ -7,7 +7,7 @@ import spray.json._
 
 import scala.util.{Failure, Success, Try}
 
-case class BitcoinClient[R[_]](
+final case class BitcoinClient[R[_]](
     user: String,
     password: String,
     host: String,
@@ -15,9 +15,9 @@ case class BitcoinClient[R[_]](
     wallet: Option[String] = None
   )(implicit sttpBackend: SttpBackend[R, Nothing])
     extends JsonFormats {
-  implicit val monadError = sttpBackend.responseMonad
+  implicit private val monadError = sttpBackend.responseMonad
 
-  val request = {
+  private val request = {
     val defaultWalletName = ""
     val walletName = wallet.getOrElse(defaultWalletName)
     val uri = uri"http://$host:$port/wallet/$walletName"
@@ -35,7 +35,7 @@ case class BitcoinClient[R[_]](
         case json: JsValue =>
           Try(json.convertTo[T]) match {
             case Success(success) => Right(success)
-            case Failure(_)       => Left(GeneralErrorResponse(s"Error parsing JSON, got: " + json.compactPrint))
+            case Failure(_)       => Left(GeneralErrorResponse(s"Error parsing JSON, got: ${json.compactPrint}"))
           }
       }
     }

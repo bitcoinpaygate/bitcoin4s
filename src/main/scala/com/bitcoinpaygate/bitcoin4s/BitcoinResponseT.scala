@@ -3,7 +3,7 @@ package com.bitcoinpaygate.bitcoin4s
 import com.bitcoinpaygate.bitcoin4s.Responses.{BitcoinResponse, CorrectResponse}
 import com.softwaremill.sttp.MonadError
 
-case class BitcoinResponseT[R[_], A <: CorrectResponse](
+final case class BitcoinResponseT[R[_], A <: CorrectResponse](
     value: R[BitcoinResponse[A]]
   )(implicit monadError: MonadError[R]) {
   import com.softwaremill.sttp.monadSyntax._

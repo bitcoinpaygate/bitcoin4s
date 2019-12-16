@@ -8,11 +8,11 @@ object Responses {
     def errorMessage: String
   }
 
-  case class GeneralErrorResponse(errorMessage: String) extends ErrorResponse
+  final case class GeneralErrorResponse(errorMessage: String) extends ErrorResponse
 
   trait CorrectResponse
 
-  case class GetWalletInfo(
+  final case class GetWalletInfo(
       walletversion: Int,
       balance: BigDecimal,
       unconfirmed_balance: BigDecimal,
@@ -22,7 +22,7 @@ object Responses {
       unlocked_until: Option[Int])
       extends CorrectResponse
 
-  case class GetNetworkInfo(
+  final case class GetNetworkInfo(
       version: Int,
       subversion: String,
       protocolversion: Int,
@@ -34,7 +34,7 @@ object Responses {
       networks: Vector[Network])
       extends CorrectResponse
 
-  case class GetMiningInfo(
+  final case class GetMiningInfo(
       blocks: Int,
       currentblockweight: Int,
       currentblocktx: Int,
@@ -45,7 +45,7 @@ object Responses {
       warnings: String)
       extends CorrectResponse
 
-  case class GetMemPoolInfo(
+  final case class GetMemPoolInfo(
       size: Int,
       bytes: Int,
       usage: Int,
@@ -53,7 +53,7 @@ object Responses {
       mempoolminfee: Int)
       extends CorrectResponse
 
-  case class GetBlockChainInfo(
+  final case class GetBlockChainInfo(
       chain: String,
       blocks: Int,
       headers: Int,
@@ -66,15 +66,15 @@ object Responses {
       pruneheight: Option[Int])
       extends CorrectResponse
 
-  case class EstimateSmartFee(
+  final case class EstimateSmartFee(
       feerate: Option[BigDecimal],
       errors: Option[List[String]],
       blocks: Int)
       extends CorrectResponse
 
-  case class UnspentTransactions(unspentTransactions: Vector[UnspentTransaction]) extends CorrectResponse
+  final case class UnspentTransactions(unspentTransactions: Vector[UnspentTransaction]) extends CorrectResponse
 
-  case class UnspentTransaction(
+  final case class UnspentTransaction(
       txid: String,
       vout: Int,
       address: String,
@@ -84,20 +84,20 @@ object Responses {
       spendable: Boolean,
       solvable: Boolean)
 
-  case class GetNewAddress(address: String) extends CorrectResponse
+  final case class GetNewAddress(address: String) extends CorrectResponse
 
-  case class GetRawChangeAddress(address: String) extends CorrectResponse
+  final case class GetRawChangeAddress(address: String) extends CorrectResponse
 
-  case class SentTransactionId(id: String) extends CorrectResponse
+  final case class SentTransactionId(id: String) extends CorrectResponse
 
-  case class HeaderHashes(hashes: Seq[String]) extends CorrectResponse
+  final case class HeaderHashes(hashes: Seq[String]) extends CorrectResponse
 
-  case class SetTxFee(result: Boolean) extends CorrectResponse
+  final case class SetTxFee(result: Boolean) extends CorrectResponse
 
-  case class ListSinceBlockResponse(transactions: List[ListSinceBlockTransaction], lastblock: String)
+  final case class ListSinceBlockResponse(transactions: List[ListSinceBlockTransaction], lastblock: String)
       extends CorrectResponse
 
-  case class ListSinceBlockTransaction(
+  final case class ListSinceBlockTransaction(
       address: String,
       category: String,
       amount: BigDecimal,
@@ -118,7 +118,7 @@ object Responses {
       `bip125-replaceable`: String,
       abandoned: Option[Boolean])
 
-  case class Transaction(
+  final case class Transaction(
       amount: BigDecimal,
       fee: Option[BigDecimal],
       confirmations: Int,
@@ -138,12 +138,12 @@ object Responses {
       extends CorrectResponse
 
   sealed trait Input
-  case class TransactionInput(txid: String, vout: Long) extends Input
-  case class CoinbaseInput(coinbase: String, sequence: Long) extends Input
+  final case class TransactionInput(txid: String, vout: Long) extends Input
+  final case class CoinbaseInput(coinbase: String, sequence: Long) extends Input
 
-  case class TransactionOutput(value: BigDecimal, n: Long)
+  final case class TransactionOutput(value: BigDecimal, n: Long)
 
-  case class RawTransaction(
+  final case class RawTransaction(
       txid: String,
       size: Int,
       vin: List[Input],
@@ -151,7 +151,7 @@ object Responses {
       confirmations: Option[Long])
       extends CorrectResponse
 
-  case class TransactionDetails(
+  final case class TransactionDetails(
       involvesWatchonly: Option[Boolean],
       address: Option[String],
       category: String,
@@ -160,9 +160,9 @@ object Responses {
       fee: Option[BigDecimal],
       abandoned: Option[Boolean])
 
-  case class TransactionHex(hex: String) extends CorrectResponse
-  case class SignedRawTransaction(hex: String, complete: Boolean) extends CorrectResponse
+  final case class TransactionHex(hex: String) extends CorrectResponse
+  final case class SignedRawTransaction(hex: String, complete: Boolean) extends CorrectResponse
 
-  case class ValidateAddress(isvalid: Boolean) extends CorrectResponse
-  case class CreateWallet(name: String) extends CorrectResponse
+  final case class ValidateAddress(isvalid: Boolean) extends CorrectResponse
+  final case class CreateWallet(name: String) extends CorrectResponse
 }

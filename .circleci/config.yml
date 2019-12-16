@@ -24,7 +24,7 @@ jobs:
           name: Scapegoat check
           command: |
             sbt scapegoat
-            length=$(wc -l "target/scala-2.12/scapegoat-report/scapegoat.html" | awk '{print $1}')
+            length=$(wc -l "target/scala-2.13/scapegoat-report/scapegoat.html" | awk '{print $1}')
             if [[ $length -gt 66 ]]; then
               echo "There are Scapegoat errors" && exit 1;
             fi
@@ -83,7 +83,7 @@ jobs:
           command: cat /dev/null | sbt coverage test coverageReport
 
       - codecov/upload:
-          file: "target/scala-2.12/scoverage-report/scoverage.xml"
+          file: "target/scala-2.13/scoverage-report/scoverage.xml"
 
   integration:
     docker:
