@@ -6,14 +6,14 @@ name := "bitcoin4s"
 
 version := Source.fromFile("VERSION").getLines.mkString
 
-scalaVersion := "2.12.10"
+scalaVersion := "2.13.1"
 
 organization := "bitcoinpaygate"
 
 libraryDependencies ++= {
-  val sttpVersion = "1.6.0"
-  val akkaVersion = "2.5.25"
-  val scalaTestVersion = "3.0.5"
+  val sttpVersion = "1.7.2"
+  val akkaVersion = "2.5.27"
+  val scalaTestVersion = "3.0.8"
   val sprayJsonVersion = "1.3.5"
 
   Seq(
