@@ -10,6 +10,8 @@ scalaVersion := "2.13.1"
 
 organization := "bitcoinpaygate"
 
+scapegoatVersion in ThisBuild := "1.4.1"
+
 libraryDependencies ++= {
   val sttpVersion = "1.7.2"
   val akkaVersion = "2.5.27"
@@ -50,8 +52,6 @@ val publishSettings =
       homepage := Some(url("https://github.com/bitcoinpaygate/bitcoin4s")),
       publishMavenStyle := false
     )
-
-scalafmtOnCompile := true
 
 lazy val IntegrationTest = config("it") extend Test
 
