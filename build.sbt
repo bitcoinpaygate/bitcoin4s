@@ -14,8 +14,8 @@ scapegoatVersion in ThisBuild := "1.4.1"
 
 libraryDependencies ++= {
   val sttpVersion = "1.7.2"
-  val akkaVersion = "2.5.27"
-  val scalaTestVersion = "3.0.8"
+  val akkaVersion = "2.6.3"
+  val scalaTestVersion = "3.1.0"
   val sprayJsonVersion = "1.3.5"
 
   Seq(

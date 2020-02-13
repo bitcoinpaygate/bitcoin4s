@@ -4,10 +4,11 @@ import com.bitcoinpaygate.bitcoin4s.ClientObjects.{AddressType, RawTransactionIn
 import com.bitcoinpaygate.bitcoin4s.Responses.{CoinbaseInput, GeneralErrorResponse, TransactionInput}
 import com.softwaremill.sttp._
 import com.softwaremill.sttp.testing.SttpBackendStub
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.flatspec.AnyFlatSpec
 import spray.json._
 
-class BitcoinClientTest extends FlatSpec with Matchers with TestDataHelper {
+class BitcoinClientTest extends AnyFlatSpec with Matchers with TestDataHelper {
   val user = "user"
   val password = "password"
   val host = "localhost"
