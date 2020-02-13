@@ -3,7 +3,8 @@ package com.bitcoinpaygate.bitcoin4s
 import com.bitcoinpaygate.bitcoin4s.ClientObjects._
 import com.bitcoinpaygate.bitcoin4s.Responses.{GetNewAddress, UnspentTransaction}
 import com.softwaremill.sttp.akkahttp.AkkaHttpBackend
-import org.scalatest.{AsyncWordSpec, Matchers}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AsyncWordSpec
 
 class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
   implicit val akkaHttpBackend = AkkaHttpBackend()
