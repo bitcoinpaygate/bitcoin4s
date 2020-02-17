@@ -115,9 +115,9 @@ final case class BitcoinClient[R[_]](
       .response(as[SetTxFee])
       .send()
 
-  def generate(number: Int)(): R[BitcoinResponse[HeaderHashes]] =
+  def generatetoaddress(number: Int, address: String)(): R[BitcoinResponse[HeaderHashes]] =
     request
-      .body(method("generate", Vector(number)))
+      .body(method("generatetoaddress", Vector(number, address)))
       .response(as[HeaderHashes])
       .send()
 
