@@ -62,7 +62,7 @@ lazy val root = (project in file("."))
     inConfig(IntegrationTest)(scalafmtConfigSettings)
   )
 
-addCommandAlias("testAll", ";test")
+addCommandAlias("testAll", ";test;it:test")
 addCommandAlias("formatAll", ";scalafmtAll;test:scalafmtAll;scalafmtSbt")
 addCommandAlias("compileAll", ";compile;test:compile;it:compile")
 addCommandAlias("checkFormatAll", ";scalafmtCheckAll;scalafmtSbtCheck")
