@@ -30,7 +30,7 @@ class BitcoinClientTest extends AnyFlatSpec with Matchers with TestDataHelper {
   }
 
   it should "generate blocks" in {
-    bitcoinClient.generate(2) match {
+    bitcoinClient.generatetoaddress(2, "mxC1MksGZQAARADNQutrT5FPVn76bqmgZW") match {
       case Left(x) => throw new RuntimeException("unexpected bitcoind response " + x)
       case Right(generated) =>
         generated.hashes should contain theSameElementsAs Seq(

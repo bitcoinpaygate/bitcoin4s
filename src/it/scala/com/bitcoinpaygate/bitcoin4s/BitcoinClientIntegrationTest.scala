@@ -57,7 +57,6 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
         result shouldBe Symbol("right")
       }
     }
-
     "send to address" in {
       val sendToAddress = (for {
         newAddress <- BitcoinResponseT(bitcoinClient.getNewAddress())
@@ -68,15 +67,20 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
         result shouldBe Symbol("right")
       }
     }
-
     "set tx fee" in {
       bitcoinClient.setTxFee(0.05).map { result =>
         result shouldBe Symbol("right")
       }
     }
-    "generate" in {
-      bitcoinClient.generate(1).map { result =>
+    "generatetoaddress" in {
+      val res = (for {
+        newAddress <- BitcoinResponseT(bitcoinClient.getNewAddress())
+        generateResult <- BitcoinResponseT(bitcoinClient.generatetoaddress(1, newAddress.address))
+      } yield generateResult).value
+
+      res.map { result =>
         result shouldBe Symbol("right")
+
       }
     }
     "get transaction" in {
@@ -103,7 +107,8 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
     }
     "list since block" in {
       val listSinceBlock = (for {
-        hash <- BitcoinResponseT(bitcoinClient.generate(1))
+        newAddress <- BitcoinResponseT(bitcoinClient.getNewAddress())
+        hash <- BitcoinResponseT(bitcoinClient.generatetoaddress(1, newAddress.address))
         listSinceBlock <- BitcoinResponseT(bitcoinClient.listSinceBlock(hash.hashes.head))
       } yield listSinceBlock).value
 
@@ -161,12 +166,10 @@ class BitcoinClientIntegrationTest extends AsyncWordSpec with Matchers {
         result shouldBe Symbol("right")
       }
     }
-
     "get change address" in {
       val result = bitcoinClient.getRawChangeAddress(Some(AddressType.BECH32))
       result.map(_ shouldBe Symbol("right"))
     }
-
     "create new wallet in" in {
       val newWalletName = System.nanoTime().toString
       val result = bitcoinClient.createWallet(newWalletName)

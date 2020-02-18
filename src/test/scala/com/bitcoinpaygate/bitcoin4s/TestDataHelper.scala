@@ -40,7 +40,7 @@ trait TestDataHelper {
           case "listunspent"                                      => TestData.listUnspentResponse
           case "getnewaddress"                                    => TestData.getNewAddressResponse
           case "getrawchangeaddress"                              => TestData.getRawChangeAddressResponse
-          case "generate"                                         => TestData.generateResponse
+          case "generatetoaddress"                                => TestData.generateToAddressResponse
           case "sendfrom" if params.contains("insufficientFunds") => TestData.insufficientFundsResponse
           case "sendtoaddress" if params(1).toDouble > 100        => TestData.insufficientFundsResponse
           case "sendtoaddress"                                    => TestData.sendToAddressResponse
